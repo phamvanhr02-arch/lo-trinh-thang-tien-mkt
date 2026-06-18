@@ -1,0 +1,870 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Hệ thống Thăng tiến Marketing — KEECOM</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+:root{
+  --blue:#2a6ff0; --blue-d:#1a52c7; --blue-50:#eef4ff; --blue-100:#dbe7ff;
+  --ink:#1a1a2e; --ink-2:#4a4f5e; --muted:#7b8190; --line:#e7eaf0;
+  --bg:#f7f9fc; --card:#ffffff;
+  --green:#16a36a; --green-50:#e8f7f0;
+  --amber:#d98a00; --amber-50:#fbf3e0;
+  --red:#e0405a; --red-50:#fcebef;
+  --purple:#7a5af0; --purple-50:#f0ecfe;
+  --radius:14px; --shadow:0 1px 2px rgba(20,30,60,.04),0 6px 20px rgba(20,30,60,.05);
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{font-family:'Be Vietnam Pro',system-ui,sans-serif;background:var(--bg);color:var(--ink);line-height:1.55;font-size:15px}
+.app{min-height:100vh}
+
+/* Top nav (LadiPage style) */
+.topnav{position:sticky;top:0;z-index:50;background:rgba(255,255,255,.93);backdrop-filter:blur(10px);border-bottom:1px solid var(--line);box-shadow:0 1px 12px rgba(20,30,60,.04)}
+.topnav .inner{max-width:1240px;margin:0 auto;display:flex;align-items:center;gap:16px;padding:11px 28px}
+.brand{display:flex;align-items:center;gap:11px;flex-shrink:0}
+.brand .logo{width:38px;height:38px;border-radius:10px;background:linear-gradient(135deg,var(--blue),#5a93ff);display:flex;align-items:center;justify-content:center;color:#fff;font-weight:800;font-size:18px;box-shadow:0 4px 12px rgba(42,111,240,.35)}
+.brand .bt{font-size:10px;letter-spacing:.12em;color:var(--blue);font-weight:700}
+.brand .bn{font-size:13px;font-weight:700;color:var(--ink);line-height:1.2}
+/* department tabs (chừa chỗ cho phòng ban khác sau này) */
+.depts{display:flex;gap:6px;border-left:1px solid var(--line);padding-left:14px}
+.dept{font-size:13px;font-weight:600;padding:7px 14px;border-radius:9px;cursor:pointer;color:var(--ink-2);white-space:nowrap}
+.dept.active{background:var(--blue-50);color:var(--blue-d)}
+.dept.soon{color:var(--muted);opacity:.55;cursor:default}
+/* section menu (dropdown theo nhóm) */
+.menu{display:flex;align-items:center;gap:2px;margin-left:auto;flex-wrap:wrap}
+.dd{position:relative}
+.dd>button{display:flex;align-items:center;gap:6px;background:none;border:none;font-family:inherit;font-size:13.5px;font-weight:600;color:var(--ink-2);padding:9px 13px;border-radius:9px;cursor:pointer}
+.dd>button:hover,.dd.has-active>button{background:var(--blue-50);color:var(--blue-d)}
+.dd>button .ca{font-size:8px;opacity:.7;transition:.2s}
+.dd.show>button .ca{transform:rotate(180deg)}
+.dd .panel{position:absolute;top:calc(100% + 7px);right:0;min-width:230px;background:#fff;border:1px solid var(--line);border-radius:12px;box-shadow:0 14px 36px rgba(20,30,60,.15);padding:7px;display:none;z-index:60}
+.dd.show .panel{display:block}
+.dd .panel a{display:flex;align-items:center;gap:11px;padding:10px 12px;border-radius:8px;color:var(--ink-2);text-decoration:none;font-size:13.5px;font-weight:500;cursor:pointer;white-space:nowrap}
+.dd .panel a .ic{width:18px;text-align:center;font-size:15px;opacity:.9}
+.dd .panel a:hover{background:var(--blue-50);color:var(--blue-d)}
+.dd .panel a.active{background:var(--blue);color:#fff;font-weight:600}
+
+/* Main */
+.main{max-width:1180px;margin:0 auto;padding:36px 28px 50px}
+.foot{display:flex;justify-content:space-between;flex-wrap:wrap;gap:8px;margin-top:34px;padding-top:18px;border-top:1px solid var(--line);font-size:12.5px;color:var(--muted)}
+.eyebrow{display:inline-block;background:var(--blue-50);color:var(--blue-d);font-size:11px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;padding:6px 13px;border-radius:999px;margin-bottom:16px}
+h1.title{font-size:34px;font-weight:800;letter-spacing:-.02em;line-height:1.15;margin-bottom:12px}
+.lead{font-size:15.5px;color:var(--ink-2);max-width:760px;margin-bottom:30px}
+.legend{display:flex;flex-wrap:wrap;gap:10px;margin:4px 0 6px}
+.lg{display:inline-flex;align-items:center;gap:9px;background:#fff;border:1px solid var(--line);border-radius:999px;padding:8px 15px;font-size:13.5px;color:var(--ink-2);box-shadow:var(--shadow)}
+.lg .lgd{width:12px;height:12px;border-radius:50%;flex-shrink:0}
+.lg b{color:var(--ink)}
+.lead b{color:var(--ink)}
+.sec{display:none;animation:fade .3s ease}
+.sec.show{display:block}
+@keyframes fade{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+
+/* Stat cards */
+.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:16px;margin-bottom:34px}
+.stat{background:var(--card);border:1px solid var(--line);border-radius:var(--radius);padding:22px 20px;box-shadow:var(--shadow)}
+.stat .num{font-size:34px;font-weight:800;color:var(--blue);line-height:1}
+.stat .lb{margin-top:8px;font-weight:600;font-size:14px}
+.stat .sub{color:var(--muted);font-size:12.5px;margin-top:2px}
+
+.block-h{display:flex;align-items:center;gap:10px;margin:34px 0 18px}
+.block-h{margin:38px 0 18px}
+.block-h .pill{background:var(--blue);color:#fff;font-size:15px;font-weight:700;letter-spacing:.01em;padding:10px 20px;border-radius:999px;box-shadow:0 5px 14px rgba(42,111,240,.28)}
+.block-h .sub{color:var(--ink-2);font-size:13.5px}
+.coll>.block-h{cursor:pointer;user-select:none}
+.block-h .cv{margin-left:auto;color:var(--muted);font-size:13px;transition:.25s;flex-shrink:0}
+.coll.closed .cv{transform:rotate(-90deg)}
+.coll.closed .collbody{display:none}
+
+/* Ladder (progression flow) */
+.ladder{display:grid;grid-template-columns:repeat(6,1fr);gap:0;background:var(--card);border:1px solid var(--line);border-radius:var(--radius);overflow:hidden;box-shadow:var(--shadow)}
+.rung{padding:18px 16px;border-top:4px solid var(--line);position:relative}
+.rung+.rung{border-left:1px solid var(--line)}
+.rung .tag{font-size:10.5px;letter-spacing:.1em;font-weight:700;color:var(--muted);text-transform:uppercase}
+.rung .nm{font-size:16px;font-weight:700;margin-top:6px}
+.rung .pay{font-size:12.5px;color:var(--ink-2);margin-top:6px}
+.rung.r0{border-top-color:#cbd2de}
+.rung.r1{border-top-color:var(--green)}
+.rung.r2{border-top-color:var(--blue)}
+.rung.r3{border-top-color:var(--amber)}
+.rung.r4{border-top-color:var(--purple)}
+.rung.r5{border-top-color:var(--red);border-top-style:dashed}
+
+/* generic cards */
+.cards{display:grid;gap:16px}
+.poss{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
+.poss .card{display:flex;flex-direction:column}
+.g4{display:grid;grid-template-columns:repeat(4,1fr);gap:14px}
+/* career path — 1 hàng, có số & mũi tên thăng tiến */
+.career{display:flex;align-items:stretch;gap:0;margin-top:4px}
+.pcard{flex:1;min-width:0;background:var(--card);border:1px solid var(--line);border-top-width:3px;border-radius:var(--radius);padding:16px 15px;box-shadow:var(--shadow);display:flex;flex-direction:column}
+.pcard .pnum{width:28px;height:28px;border-radius:50%;color:#fff;font-weight:700;display:flex;align-items:center;justify-content:center;font-size:13px;margin-bottom:10px}
+.pcard h4{font-size:14.5px;font-weight:700;line-height:1.25}
+.pcard .role{font-size:12px;color:var(--blue);font-weight:600;margin-top:3px}
+.pcard .badge{margin:8px 0;align-self:flex-start;white-space:normal;line-height:1.35;max-width:100%}
+.pcard p{font-size:12.5px;color:var(--ink-2);line-height:1.45;margin:2px 0 0}
+.parrow{display:flex;align-items:center;justify-content:center;color:var(--blue);font-size:20px;font-weight:800;flex-shrink:0;padding:0 5px}
+/* OR-set: 3 tiêu chí nối bằng HOẶC + thanh VÀ */
+.orset{display:flex;align-items:stretch;gap:0;margin-top:4px}
+.orcard{flex:1;min-width:0;background:#fff;border:1px solid var(--line);border-top-width:3px;border-radius:12px;padding:15px 16px;display:flex;flex-direction:column}
+.orcard .oh{display:flex;align-items:center;gap:10px;margin-bottom:8px}
+.orcard .onum{width:28px;height:28px;border-radius:50%;color:#fff;font-weight:700;display:flex;align-items:center;justify-content:center;font-size:13px;flex-shrink:0}
+.orcard .ot{font-size:14.5px;font-weight:700;line-height:1.25}
+.orcard p{font-size:13px;color:var(--ink-2);line-height:1.5;margin:0}
+.orjoin{display:flex;align-items:center;justify-content:center;font-weight:800;font-size:11px;letter-spacing:.06em;color:var(--muted);flex-shrink:0;padding:0 9px}
+.andbar{display:flex;align-items:center;gap:13px;background:var(--blue-50);border:1px solid var(--blue-100);border-radius:12px;padding:13px 17px;margin-top:14px}
+.andbar .ab{background:var(--blue);color:#fff;font-weight:800;font-size:12px;padding:6px 13px;border-radius:8px;flex-shrink:0}
+.andbar .at{font-size:13.5px;color:var(--ink-2)}
+.card{background:var(--card);border:1px solid var(--line);border-radius:var(--radius);padding:22px 24px;box-shadow:var(--shadow)}
+.card h3{font-size:17px;font-weight:700;display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+.card .role{font-size:12.5px;color:var(--blue);font-weight:600;margin-top:3px}
+.card p.d{color:var(--ink-2);margin-top:10px;font-size:14px}
+
+.badge{font-size:11.5px;font-weight:600;padding:4px 11px;border-radius:999px;white-space:nowrap}
+.b-blue{background:var(--blue-50);color:var(--blue-d)}
+.b-green{background:var(--green-50);color:var(--green)}
+.b-amber{background:var(--amber-50);color:var(--amber)}
+.b-red{background:var(--red-50);color:var(--red)}
+.b-purple{background:var(--purple-50);color:var(--purple)}
+.b-gray{background:#eef0f4;color:var(--muted)}
+
+/* criteria list */
+.crit{list-style:none;margin-top:12px}
+.crit li{display:flex;gap:10px;padding:8px 0;border-top:1px solid var(--line);font-size:14px}
+.crit li:first-child{border-top:none}
+.crit li .dot{width:8px;height:8px;border-radius:50%;margin-top:7px;flex-shrink:0}
+.dot-r{background:var(--red)}.dot-g{background:var(--green)}.dot-b{background:var(--blue)}.dot-a{background:var(--amber)}
+.crit li b{color:var(--ink)}
+.two{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+.three{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
+.card .way{display:inline-flex;align-items:center;justify-content:center;width:26px;height:26px;border-radius:8px;background:var(--blue);color:#fff;font-weight:700;font-size:13px;margin-right:8px}
+.note{background:var(--blue-50);border:1px solid var(--blue-100);border-radius:12px;padding:16px 18px;font-size:13.5px;color:var(--ink-2)}
+.note h4{color:var(--blue-d);font-size:14px;margin-bottom:8px}
+.note ul{margin-left:16px}.note li{margin:4px 0}
+
+/* mechanism grid */
+.mech{display:grid;grid-template-columns:repeat(2,1fr);gap:14px;margin-top:18px}
+.mech .m{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:16px 18px;box-shadow:var(--shadow)}
+.mech .m .ico{width:34px;height:34px;border-radius:9px;background:var(--blue-50);color:var(--blue-d);display:flex;align-items:center;justify-content:center;font-size:17px;margin-bottom:10px}
+.mech .m h4{font-size:14.5px;font-weight:700}
+.mech .m p{font-size:13.5px;color:var(--ink-2);margin-top:5px}
+
+/* timeline */
+.phase{margin-bottom:26px}
+.phase>.lbl{display:inline-block;font-weight:600;font-size:13px;color:#fff;padding:7px 15px;border-radius:999px;margin-bottom:14px}
+.tl{display:grid;grid-template-columns:repeat(4,1fr);background:var(--card);border:1px solid var(--line);border-radius:var(--radius);overflow:hidden;box-shadow:var(--shadow)}
+.tl .col{padding:16px 16px;border-left:1px solid var(--line)}
+.tl .col:first-child{border-left:none}
+.tl .col .t{font-weight:700;font-size:14px}
+.tl .col .s{font-size:11.5px;color:var(--muted);margin-bottom:8px}
+.tl .col ul{list-style:none}
+.tl .col li{font-size:13px;color:var(--ink-2);padding:3px 0;padding-left:14px;position:relative}
+.tl .col li::before{content:"›";position:absolute;left:0;color:var(--blue);font-weight:700}
+
+/* competency accordion */
+.cmp{background:var(--card);border:1px solid var(--line);border-radius:var(--radius);margin-bottom:12px;overflow:hidden;box-shadow:var(--shadow)}
+.cmp>.hd{display:flex;align-items:center;gap:13px;padding:16px 20px;cursor:pointer;user-select:none}
+.cmp>.hd:hover{background:#fafbfd}
+.cmp .idx{width:30px;height:30px;border-radius:9px;background:var(--blue);color:#fff;font-weight:700;display:flex;align-items:center;justify-content:center;font-size:14px;flex-shrink:0}
+.cmp .ti{flex:1}
+.cmp .ti .gn{font-size:10.5px;letter-spacing:.08em;font-weight:700;text-transform:uppercase;color:var(--muted)}
+.cmp .ti .nn{font-size:15.5px;font-weight:700;margin-top:1px}
+.cmp .chev{color:var(--muted);transition:.25s;font-size:13px}
+.cmp.open .chev{transform:rotate(180deg)}
+.cmp .bd{display:none;padding:0 20px 20px}
+.cmp.open .bd{display:block}
+.cmp .bd .card{box-shadow:none}
+.cmp .bd>.crit{padding:0 2px}
+.cmp .def{font-style:italic;color:var(--ink-2);font-size:13.5px;background:var(--bg);border-radius:10px;padding:12px 15px;margin-bottom:14px}
+.lvls{display:grid;grid-template-columns:repeat(4,1fr);gap:12px}
+.lv{border:1px solid var(--line);border-radius:11px;padding:13px 14px;background:#fff}
+.lv .lh{display:flex;align-items:center;gap:7px;margin-bottom:8px}
+.lv .lc{font-size:10.5px;font-weight:700;color:var(--blue-d);background:var(--blue-50);padding:2px 8px;border-radius:6px}
+.lv .lt{font-size:12px;font-weight:700;line-height:1.3}
+.lv ul{list-style:none}
+.lv li{font-size:12.5px;color:var(--ink-2);padding:3px 0 3px 12px;position:relative}
+.lv li::before{content:"•";position:absolute;left:0;color:var(--blue)}
+.lv.l1 .lc{background:#eef0f4;color:var(--muted)}
+.lv.l2 .lc{background:var(--green-50);color:var(--green)}
+.lv.l3 .lc{background:var(--amber-50);color:var(--amber)}
+.lv.l4 .lc{background:var(--purple-50);color:var(--purple)}
+.ex{margin-top:13px;font-size:12.5px;color:var(--ink-2)}
+.ex a{display:inline-flex;align-items:center;gap:6px;color:var(--blue);text-decoration:none;background:var(--blue-50);padding:5px 11px;border-radius:8px;margin:5px 6px 0 0;font-weight:600;font-size:12px}
+.ex a:hover{background:var(--blue-100)}
+.grp-divider{display:flex;align-items:center;gap:10px;margin:24px 0 14px;font-size:12px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--muted)}
+.grp-divider::after{content:"";flex:1;height:1px;background:var(--line)}
+
+/* job-description table (phong cách Excel) */
+.tbl-wrap{overflow-x:auto;border-radius:var(--radius);box-shadow:var(--shadow);margin-bottom:8px}
+.jt{width:100%;min-width:680px;border-collapse:collapse;background:#fff;font-size:13.5px}
+.jt thead th{background:#5ccfc6;color:#08403c;font-weight:700;font-size:11.5px;letter-spacing:.03em;text-transform:uppercase;padding:13px 15px;text-align:left;border-bottom:2px solid #46bcb3;white-space:nowrap}
+.jt td{padding:13px 15px;border-bottom:1px solid var(--line);vertical-align:top;color:var(--ink-2);line-height:1.5}
+.jt tbody tr:last-child td{border-bottom:none}
+.jt tbody tr:hover{background:#f5fbfb}
+.jt .stt{text-align:center;font-weight:700;color:var(--muted);width:44px}
+.jt .lvc{text-align:center;width:74px}
+.jt .desc{color:var(--ink);font-weight:500}
+.cat{display:inline-block;font-size:10px;font-weight:700;letter-spacing:.04em;padding:4px 10px;border-radius:999px;white-space:nowrap}
+.cat-cm{background:#ece8fc;color:#6a4ee0}
+.cat-ql{background:#fce8d2;color:#cf8500}
+.cat-ch{background:#d4eff1;color:#138f8a}
+.lvbadge{display:inline-flex;align-items:center;justify-content:center;width:30px;height:30px;border-radius:8px;background:var(--blue-50);color:var(--blue-d);font-weight:700;font-size:14px}
+/* competency table (4 cấp độ dạng bảng) */
+.kt{min-width:1040px}
+.kt .ktname{min-width:180px;max-width:210px}
+.kt .ktnn{font-weight:700;color:var(--ink);font-size:13.5px}
+.kt .ktdef{font-size:11px;color:var(--muted);font-style:italic;margin-top:5px;line-height:1.4}
+.kt .ktlv{min-width:205px;vertical-align:top}
+.kt .ktlvt{font-weight:700;font-size:11.5px;margin-bottom:5px;line-height:1.3}
+.kt .ktsub{font-size:10.5px;color:var(--muted);margin:-2px 0 5px}
+.kt .lc{display:inline-block;font-size:9.5px;font-weight:700;padding:1px 6px;border-radius:5px;margin-right:5px}
+.kt .lc.l1{background:#eef0f4;color:var(--muted)}
+.kt .lc.l2{background:var(--green-50);color:var(--green)}
+.kt .lc.l3{background:var(--amber-50);color:var(--amber)}
+.kt .lc.l4{background:var(--purple-50);color:var(--purple)}
+.kt ul{list-style:none;margin:0}
+.kt li{font-size:12px;color:var(--ink-2);padding:2px 0 2px 11px;position:relative;line-height:1.4}
+.kt li::before{content:"•";position:absolute;left:0;color:var(--blue)}
+.kt .ktgrp td{background:#eef2f8;font-weight:700;font-size:10.5px;letter-spacing:.06em;color:var(--muted);text-transform:uppercase;padding:8px 15px}
+.kt .ktex{margin-top:7px}
+.kt .ktex a{display:inline-block;font-size:10.5px;font-weight:600;color:var(--blue-d);text-decoration:none;background:var(--blue-50);padding:3px 8px;border-radius:6px;margin:3px 4px 0 0}
+
+/* process steps */
+.steps{counter-reset:s}
+.step{display:flex;gap:16px;padding:18px 0;border-top:1px solid var(--line)}
+.step:first-child{border-top:none}
+.step .n{width:32px;height:32px;border-radius:50%;background:var(--blue);color:#fff;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.step .c h4{font-size:15px;font-weight:700}
+.step .c ul{list-style:none;margin-top:7px}
+.step .c li{font-size:13.5px;color:var(--ink-2);padding:2px 0 2px 14px;position:relative}
+.step .c li::before{content:"–";position:absolute;left:0;color:var(--blue)}
+/* horizontal process flow */
+.flow{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
+.fstep{background:var(--card);border:1px solid var(--line);border-radius:var(--radius);padding:18px;box-shadow:var(--shadow);position:relative}
+.fstep .fn{display:flex;align-items:flex-start;gap:11px;margin-bottom:11px;padding-bottom:11px;border-bottom:1px solid var(--line)}
+.fstep .fn .nm{width:30px;height:30px;border-radius:50%;background:var(--blue);color:#fff;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0;font-size:14px;box-shadow:0 3px 9px rgba(42,111,240,.3)}
+.fstep .fn h4{font-size:14.5px;font-weight:700;line-height:1.3;padding-top:3px}
+.fstep ul{list-style:none}
+.fstep li{font-size:13px;color:var(--ink-2);padding:4px 0 4px 15px;position:relative;line-height:1.45}
+.fstep li::before{content:"›";position:absolute;left:0;color:var(--blue);font-weight:700}
+
+@media(max-width:980px){
+  .topnav .inner{flex-wrap:wrap;gap:10px;padding:10px 16px}
+  .brand .bn{display:none}
+  .menu{width:100%;margin-left:0;flex-wrap:wrap;gap:4px;justify-content:flex-start}
+  .dd{position:static}
+  .dd .panel{position:absolute;left:14px;right:14px;min-width:0;max-width:none}
+  .main{padding:22px 16px 60px}
+  .stats,.ladder,.tl,.lvls,.mech,.two,.three,.flow,.poss,.g4{grid-template-columns:1fr!important}
+  .career,.orset{flex-direction:column}
+  .parrow{transform:rotate(90deg);padding:6px 0}
+  .orjoin{padding:6px 0}
+  h1.title{font-size:26px}
+}
+</style>
+</head>
+<body>
+<div class="app">
+  <header class="topnav">
+    <div class="inner">
+      <div class="brand">
+        <div class="logo">K</div>
+        <div><div class="bt">KEECOM</div><div class="bn">Lộ trình Thăng tiến</div></div>
+      </div>
+      <div class="depts" id="depts">
+        <div class="dept active">Marketing</div>
+      </div>
+      <nav class="menu" id="nav"></nav>
+    </div>
+  </header>
+  <main class="main"><div id="content"></div>
+    <footer class="foot"><span>KEECOM · Tài liệu nội bộ · Phòng Marketing</span><span>Cập nhật theo từng quý</span></footer>
+  </main>
+</div>
+
+<script>
+/* ---------- COMPETENCY DATA ---------- */
+const L=(c,t,items)=>({c,t,items});
+const COMP=[
+{id:1,grp:'CHUYÊN MÔN',name:'Đọc hiểu, phân tích',leader:false,
+ def:`Khả năng bóc tách đúng cấu tạo – nội dung – giá trị của sản phẩm, từ đó chuyển hoá thành thông điệp, kịch bản và chủ đề truyền thông phù hợp cho video quảng cáo.`,
+ lv:[
+  L('Đọc hiểu cơ bản','',[`Hiểu sách nói về nội dung gì`,`Hiểu đối tượng đọc`,`Không truyền thông sai nội dung`]),
+  L('Phân tích để triển khai','',[`Bóc được điểm mạnh của sách`,`Biết chọn nội dung hấp dẫn để quảng cáo`]),
+  L('Phân tích để tối ưu','',[`Test nhiều thông điệp cho cùng 1 sản phẩm`,`Biết vì sao video này hiệu quả, video kia không`,`Điều chỉnh thông điệp theo dữ liệu ads`]),
+  L('Phân tích định hướng','',[`Tìm ra dạng quảng cáo hiệu quả cho các dòng sách`,`Tìm ra nhiều thông điệp win cho sản phẩm`,`Định hướng nội dung, thông điệp, dạng video dài hạn cho team`])
+ ],
+ ex:[['Ví dụ: thông điệp theo chủ đề trong sách','https://www.facebook.com/share/v/1AW2pRQzxF/'],['Ví dụ: thông điệp theo câu chuyện lịch sử','https://www.facebook.com/share/v/1AQJgg1zNM/']]},
+
+{id:2,grp:'CHUYÊN MÔN',name:'Research',leader:false,
+ def:`Khả năng thu thập, chọn lọc và phân tích thông tin liên quan đến sản phẩm, khách hàng mục tiêu, thị trường và nội dung quảng cáo, nhằm tìm ra insight và ý tưởng video hiệu quả.`,
+ lv:[
+  L('Research cơ bản','',[`Biết tìm ý tưởng tương tự về sách trên Douyin nhưng ý tưởng còn trùng nhiều với video đã triển khai`,`Biết xem quảng cáo đối thủ nhưng chưa có thói quen check thường xuyên`]),
+  L('Research có định hướng','',[`Biết research Douyin theo ý tưởng muốn triển khai`,`Tự lọc được các video trùng lặp đã khai thác`,`Thường xuyên check đối thủ`]),
+  L('Research để tối ưu','',[`Research đa nền tảng: TikTok, FB, Douyin, YouTube ở VN & TQ`,`Biết chắp ghép các ý tưởng với nhau`,`Biết vì sao ý tưởng này hiệu quả`,`Được phân phối tự nhiên các bài win của đối thủ`]),
+  L('Research định hướng nội dung','',[`Luôn cập nhật dạng quảng cáo mới nhất trong 3 tháng trên các nền tảng`,`Theo dõi sát thị trường, nhận bài win trong vòng 5 ngày`,`Biết ý tưởng bài win lấy ở đâu, tìm được bài gốc`,`Định hướng & lọc ý tưởng trùng lặp cho team`])
+ ],ex:[]},
+
+{id:3,grp:'CHUYÊN MÔN',name:'Diễn đạt & kể chuyện',leader:false,
+ def:`Khả năng sử dụng ngôn ngữ mạch lạc, dễ hiểu, Việt hoá, mang tính thương mại cao, logic với hình ảnh minh hoạ.`,
+ lv:[
+  L('Viết cơ bản','',[`Viết lời dẫn giống ~90% bản sub từ video Douyin, chưa Việt hoá được`,`Chưa định hình rõ câu nào đi cùng cảnh quay nào`,`Không sai thông điệp sách`]),
+  L('Viết dễ hiểu & có nhịp','',[`Kịch bản có mở – thân – kết rõ`,`Dùng ngôn ngữ đúng đối tượng, đã biết Việt hoá`,`Gọi được tên một số chủ đề trong phần giới thiệu sách`,`Hình dung được câu từ nào đi với cảnh quay nào`]),
+  L('Viết có sức thuyết phục','',[`Việt hoá câu chuyện dễ hiểu, hợp lý với thực tế`,`Nêu sâu hơn nội dung trong từng chủ đề`,`Lời dẫn & hình ảnh hỗ trợ nhau, rõ cảnh toàn – trung – cận`]),
+  L('Viết để tối ưu quảng cáo','',[`Biết vì sao kịch bản có khả năng hiệu quả`,`Điều chỉnh lời dẫn theo tệp khách hàng`,`Chủ động loại bỏ đoạn "hay nhưng không thương mại"`,`Đúc rút công thức kịch bản và chỉ cho người khác`])
+ ],
+ ex:[['Ví dụ: nhân vật câu chuyện lịch sử','https://www.facebook.com/share/v/1AQJgg1zNM/'],['Ví dụ: gạch chân bộ từ vựng theo chủ đề','https://www.facebook.com/reel/2685891705087815']]},
+
+{id:4,grp:'CHUYÊN MÔN',name:'Quay, chụp bằng điện thoại',leader:false,
+ def:`Khả năng tự thực hiện và kiểm soát chất lượng cảnh quay: bố cục, ánh sáng, góc máy, chuyển động, background phù hợp với kịch bản và sản phẩm.`,
+ lv:[
+  L('Quay đúng','',[`Quay đủ cảnh theo kịch bản`,`Sách, tay, chữ nhìn rõ`]),
+  L('Quay dễ xem','',[`Không rung, không mất nét, đủ sáng`,`Biết chọn góc quay phù hợp (cận / trung / toàn)`]),
+  L('Quay có chủ đích quảng cáo','',[`Chọn góc quay, background phù hợp màu sắc & ý nghĩa sản phẩm`,`Chuyển động nhịp nhàng, đan xen cảnh động – tĩnh – có người`,`Biết nhấn vào chi tiết sách`,`Biết cảnh nào quay dài, cảnh nào quay nhanh`]),
+  L('Quay để tối ưu','',[`Chủ động học hỏi để quay nhiều biến thể cho cùng 1 cảnh`,`Nhìn cảnh là biết dùng được hay không, nên sửa ở đâu`,`Chuẩn hoá cách quay cho team`])
+ ],ex:[]},
+
+{id:5,grp:'CHUYÊN MÔN',name:'Edit video trên CapCut',leader:false,
+ def:`Khả năng dựng, cắt, sắp xếp chữ – hình ảnh – giọng đọc – âm nhạc nhịp nhàng, tạo video có cảm xúc, giữ chân người xem và truyền tải đúng thông điệp sản phẩm.`,
+ lv:[
+  L('Edit đúng','',[`Import & cắt ghép theo thứ tự kịch bản`,`Chèn chữ cơ bản (hook, CTA)`,`Âm thanh rõ, không lệch tiếng`,`Xuất video đúng format FB Ads`]),
+  L('Edit dễ xem','',[`Hình ảnh & lời dẫn logic, chuyển voice khớp chuyển cảnh`,`Sắp xếp cảnh toàn – trung – cận đan xen`,`Chọn font phù hợp đối tượng & sản phẩm`]),
+  L('Edit nhịp nhàng','',[`Áp dụng quy tắc "vào nhanh ra chậm"`,`Dùng hiệu ứng phù hợp để video mượt hơn`,`Cảm nhận được nhịp độ video`,`Dùng nhạc & giọng hợp mood, nhấn câu chữ tạo cao trào`]),
+  L('Edit để tối ưu','',[`Có bộ nhạc, hiệu ứng, font, màu thường dùng`,`Nhìn video biết lỗi ở đâu, sửa nhịp / chữ / cảnh nào`,`Chuẩn hoá quy trình edit & tối ưu thời gian cho team`])
+ ],ex:[]},
+
+{id:6,grp:'CHUYÊN MÔN',name:'Xử lý số & dữ liệu (camp, Excel)',leader:false,
+ def:`Khả năng thu thập, đọc hiểu, tổng hợp và phân tích dữ liệu quảng cáo, dùng Excel để theo dõi hiệu quả, tối ưu ngân sách và hỗ trợ ra quyết định chiến dịch.`,
+ lv:[
+  L('Đọc hiểu dữ liệu cơ bản','',[`Tạo chiến dịch & nhân camp theo chỉ dẫn`,`Hiểu chỉ số cơ bản: CPM, CTR, chi phí, số lượng data`,`Nhập dữ liệu vào file Excel có sẵn`,`Không đọc sai số liệu`]),
+  L('Tổng hợp & theo dõi','',[`Tự tạo & nhân camp không cần chỉ dẫn`,`Đúng quy trình: lên bài, seeding, cài botcake, nhân camp thường/GH, vít bài`,`Tự lập bảng theo dõi hiệu quả camp`,`Biết tính chi phí cho phép của 1 data`]),
+  L('Phân tích & đánh giá','',[`Phân tích nguyên nhân tăng/giảm ngân sách, duy trì bài lâu`,`Đọc chỉ số để tối ưu hook, giới thiệu SP, CTA, ladi`,`Phát hiện & sửa lỗi chiến dịch của mình`,`Làm chủ file sheet khi test sản phẩm mới`]),
+  L('Ứng dụng dữ liệu để tối ưu','',[`Tìm ra cách nhân camp, care camp mới hiệu quả`,`Đúc rút công thức, quy trình nhân camp`,`Dùng dữ liệu để báo cáo & đề xuất phương án`])
+ ],ex:[]},
+
+{id:7,grp:'QUẢN LÝ',name:'Đào tạo, chia sẻ',leader:true,
+ def:`Khả năng truyền đạt kiến thức, kinh nghiệm và tư duy marketing cho thành viên, giúp họ hiểu đúng – làm đúng – làm tốt hơn qua hướng dẫn, chia sẻ và phản hồi giá trị.`,
+ lv:[
+  L('Hướng dẫn cơ bản','Biết nói cho người khác làm',[`Giải thích được công việc cần làm`,`Trả lời câu hỏi của thành viên`,`Chia sẻ kinh nghiệm khi được hỏi`,`Diễn đạt đơn giản, dễ hiểu`]),
+  L('Phản biện & sửa sai','Giúp người khác làm đúng hơn',[`Nhận xét điểm đúng – sai trong sản phẩm của team`,`Phản biện trên cơ sở công việc, không cảm tính`,`Chỉ ra lỗi cụ thể & cách sửa`,`Diễn đạt rõ ràng, không gây phản ứng tiêu cực`]),
+  L('Đào tạo & nâng trình','Giúp người khác tiến bộ',[`Chủ động chia sẻ kiến thức, case, bài học`,`Giải thích vì sao phải làm như vậy`,`Giúp thành viên hiểu bản chất, không chỉ làm theo`,`Biết đặt câu hỏi để team tự suy nghĩ`]),
+  L('Xây dựng văn hoá chia sẻ','Tạo ảnh hưởng trong team',[`Tạo môi trường học hỏi, chia sẻ`,`Khuyến khích phản biện lành mạnh`,`Chuẩn hoá kiến thức & cách làm chung`,`Truyền cảm hứng học tập & cải thiện liên tục`])
+ ],ex:[]},
+
+{id:8,grp:'QUẢN LÝ',name:'Tư duy tổng quát & giao việc',leader:true,
+ def:`Khả năng nhìn toàn bộ bức tranh công việc của team, hiểu mục tiêu – nguồn lực – con người, từ đó phân công đúng người – đúng việc – đúng thời điểm.`,
+ lv:[
+  L('Hiểu công việc','Biết team đang làm gì',[`Nắm các đầu việc chính của team`,`Biết ai đang làm việc gì`,`Theo dõi được tiến độ cơ bản`]),
+  L('Sắp xếp & phân công','Giao việc được',[`Phân công công việc rõ ràng`,`Giao việc đúng mô tả, đúng deadline`,`Hạn chế giao chồng việc`,`Biết điều chỉnh khi có phát sinh`]),
+  L('Nhìn người & tối ưu nguồn lực','Giao đúng người',[`Nhận diện điểm mạnh – yếu từng thành viên`,`Biết kết hợp người này với người kia`,`Giao việc phù hợp năng lực`,`Biết khi nào giao thêm, giảm tải, đổi vai`]),
+  L('Tổ chức & điều phối tổng thể','Quản lý bằng hệ thống',[`Thiết kế luồng công việc rõ ràng`,`Phân bổ nguồn lực theo mục tiêu`,`Chủ động dự phòng rủi ro`,`Team vận hành ổn định ngay cả khi leader vắng mặt`])
+ ],ex:[]},
+
+{id:9,grp:'QUẢN LÝ',name:'Quan sát & giải quyết vấn đề',leader:true,
+ def:`Khả năng nhận diện sớm vấn đề trong công việc và con người qua quan sát, lắng nghe phản hồi, tìm nguyên nhân và đưa giải pháp phù hợp, khả thi.`,
+ lv:[
+  L('Nhận diện vấn đề','Biết có vấn đề xảy ra',[`Quan sát được dấu hiệu bất thường`,`Lắng nghe phản ánh của thành viên`,`Nhận biết khi công việc chậm tiến độ / sai hướng`,`Báo cáo vấn đề kịp thời`]),
+  L('Tìm hiểu nguyên nhân','Hiểu vì sao có vấn đề',[`Đặt câu hỏi để làm rõ vấn đề`,`Phân biệt do năng lực, quy trình hay phối hợp`,`Thu thập thông tin liên quan`,`Tránh kết luận vội vàng`]),
+  L('Đề xuất & triển khai giải pháp','Xử lý được vấn đề',[`Đưa giải pháp phù hợp bối cảnh`,`Hướng dẫn team thực hiện`,`Theo dõi hiệu quả sau xử lý`,`Điều chỉnh nếu chưa hiệu quả`]),
+  L('Phòng ngừa & cải thiện liên tục','Nâng cấp hệ thống',[`Rút kinh nghiệm sau mỗi vấn đề`,`Điều chỉnh quy trình tránh lặp lỗi`,`Chủ động phát hiện rủi ro sớm`,`Giúp team nâng khả năng tự xử lý`])
+ ],ex:[]},
+
+{id:10,grp:'QUẢN LÝ',name:'Tổng hợp, phân tích, báo cáo',leader:true,
+ def:`Khả năng thu thập thông tin & phản hồi từ team, chọn lọc nội dung quan trọng, phân tích có trọng tâm và trình bày rõ ràng cho cấp trên, hỗ trợ ra quyết định quản lý.`,
+ lv:[
+  L('Tổng hợp thông tin','Thu thập & trình bày lại',[`Thu thập đầy đủ báo cáo từ thành viên`,`Gộp thông tin đúng, không thiếu`,`Trình bày lại theo yêu cầu`,`Không làm sai lệch nội dung gốc`]),
+  L('Sắp xếp & làm rõ','Báo cáo dễ hiểu',[`Sắp xếp thông tin theo logic`,`Phân loại: đã làm, đang làm, vấn đề phát sinh`,`Báo cáo rõ ràng, mạch lạc`,`Người đọc nắm được tình hình chung`]),
+  L('Phân tích & đánh giá','Báo cáo có quan điểm',[`Phân tích nguyên nhân đạt / chưa đạt`,`Chỉ ra điểm mạnh – điểm yếu`,`Nêu rõ vấn đề cần chú ý`,`Nhận định dựa trên dữ liệu & thực tế`]),
+  L('Đề xuất & định hướng','Báo cáo mang tính quản lý',[`Đề xuất phương án xử lý / cải thiện`,`Đưa khuyến nghị cụ thể`,`Dự báo rủi ro nếu không điều chỉnh`,`Hỗ trợ cấp trên định hướng tiếp theo`])
+ ],ex:[]},
+
+{id:11,grp:'CHUNG',name:'Giao tiếp, làm việc nhóm',leader:false,
+ def:`Khả năng trao đổi thông tin rõ ràng, phối hợp hiệu quả với thành viên và phòng ban, xây dựng quan hệ hợp tác, tạo tin tưởng – đồng cảm và cùng hướng tới mục tiêu chung.`,
+ lv:[
+  L('Giao tiếp cơ bản','Trao đổi được thông tin',[`Truyền đạt yêu cầu công việc rõ ràng`,`Lắng nghe ý kiến của người khác`,`Phản hồi khi được hỏi`,`Giao tiếp lịch sự, đúng mực`]),
+  L('Phối hợp công việc','Làm việc nhóm hiệu quả',[`Chủ động trao đổi để phối hợp`,`Chia sẻ thông tin kịp thời`,`Tôn trọng vai trò & ý kiến người khác`,`Hỗ trợ đồng đội khi cần`]),
+  L('Gắn kết & tạo tin tưởng','Xây quan hệ làm việc tốt',[`Thể hiện sự đồng cảm với đồng đội`,`Hiểu khó khăn của người khác`,`Tạo không khí làm việc tích cực`,`Giúp các bên sẵn sàng hợp tác`]),
+  L('Kết nối & điều phối liên phòng ban','Tạo ảnh hưởng rộng',[`Kết nối các phòng ban đạt mục tiêu chung`,`Điều hoà lợi ích, hạn chế xung đột`,`Truyền tải tinh thần hợp tác`,`Góp phần xây dựng văn hoá tích cực`])
+ ],ex:[]}
+];
+
+function renderComp(c){
+  const lvls=c.lv.map((l,i)=>`<div class="lv l${i+1}"><div class="lh"><span class="lc">Cấp ${i+1}</span></div>
+    <div class="lt">${l.c}</div>${l.t?`<div class="s" style="font-size:11px;color:var(--muted);margin:2px 0 6px">${l.t}</div>`:''}
+    <ul>${l.items.map(x=>`<li>${x}</li>`).join('')}</ul></div>`).join('');
+  const ex=c.ex.length?`<div class="ex"><b>Ví dụ tham khảo:</b><br>${c.ex.map(e=>`<a href="${e[1]}" target="_blank" rel="noopener">▶ ${e[0]}</a>`).join('')}</div>`:'';
+  return `<div class="cmp"><div class="hd" onclick="this.parentElement.classList.toggle('open')">
+    <div class="idx">${c.id}</div>
+    <div class="ti"><div class="gn">${c.grp}</div><div class="nn">${c.name}</div></div>
+    <div class="chev">▼</div></div>
+    <div class="bd"><div class="def">${c.def}</div><div class="lvls">${lvls}</div>${ex}</div></div>`;
+}
+function compGroups(list){
+  let html='',cur='';
+  list.forEach(c=>{ if(c.grp!==cur){cur=c.grp;html+=`<div class="grp-divider">${cur}</div>`;} html+=renderComp(c); });
+  return html;
+}
+function renderCompTable(list){
+  let rows='',cur='',n=0;
+  list.forEach(c=>{
+    if(c.grp!==cur){cur=c.grp;rows+=`<tr class="ktgrp"><td colspan="5">${c.grp}</td></tr>`;}
+    n++;
+    const ex=c.ex.length?`<div class="ktex">${c.ex.map(e=>`<a href="${e[1]}" target="_blank" rel="noopener">▶ ${e[0]}</a>`).join('')}</div>`:'';
+    rows+=`<tr>
+      <td class="ktname"><div class="ktnn">${n}. ${c.name}</div><div class="ktdef">${c.def}</div>${ex}</td>
+      ${c.lv.map((l,i)=>`<td class="ktlv"><div class="ktlvt"><span class="lc l${i+1}">Cấp ${i+1}</span>${l.c}</div>${l.t?`<div class="ktsub">${l.t}</div>`:''}<ul>${l.items.map(x=>`<li>${x}</li>`).join('')}</ul></td>`).join('')}
+    </tr>`;
+  });
+  return `<div class="tbl-wrap"><table class="jt kt"><thead><tr><th>Năng lực</th><th>Cấp độ 1</th><th>Cấp độ 2</th><th>Cấp độ 3</th><th>Cấp độ 4</th></tr></thead><tbody>${rows}</tbody></table></div>`;
+}
+
+/* ---------- MÔ TẢ CÔNG VIỆC ---------- */
+const catCls={'CHUYÊN MÔN':'cat-cm','QUẢN LÝ':'cat-ql','CHUNG':'cat-ch'};
+const MTCV_NV=[
+ ['CHUYÊN MÔN','Sản xuất video','Nghiên cứu sản phẩm: hiểu cấu tạo – tính năng – lợi ích sản phẩm','Đọc hiểu, phân tích',3,4],
+ ['CHUYÊN MÔN','Sản xuất video','Tìm ý tưởng triển khai sản phẩm','Research',3,4],
+ ['CHUYÊN MÔN','Sản xuất video','Chuốt, hoàn thiện kịch bản (lời dẫn + cảnh cần quay)','Diễn đạt, kể chuyện bằng ngôn ngữ & hình ảnh',3,4],
+ ['CHUYÊN MÔN','Sản xuất video','Quay video','Quay, chụp hình ảnh – video bằng điện thoại',3,4],
+ ['CHUYÊN MÔN','Sản xuất video','Edit video','Edit video trên CapCut',3,4],
+ ['CHUYÊN MÔN','Quản lý & tối ưu quảng cáo','Set camp, care camp; theo dõi, đo lường hiệu quả & tối ưu ngân sách','Tạo & nhân camp; xử lý số/dữ liệu; Excel',3,4],
+ ['CHUNG','Hợp tác & phối hợp nội bộ','Phối hợp với thành viên trong team & các phòng ban khác để đạt mục tiêu team & công ty','Giao tiếp, làm việc nhóm',3,4]
+];
+const MTCV_LEAD=[
+ ['CHUYÊN MÔN','Sản xuất video','Nghiên cứu sản phẩm: hiểu cấu tạo – tính năng – lợi ích sản phẩm','Đọc hiểu, phân tích',4],
+ ['CHUYÊN MÔN','Sản xuất video','Tìm ý tưởng triển khai sản phẩm','Research',4],
+ ['CHUYÊN MÔN','Sản xuất video','Chuốt, hoàn thiện kịch bản (lời dẫn + cảnh cần quay)','Diễn đạt, kể chuyện bằng ngôn ngữ & hình ảnh',4],
+ ['CHUYÊN MÔN','Sản xuất video','Quay video','Quay, chụp hình ảnh – video bằng điện thoại',4],
+ ['CHUYÊN MÔN','Sản xuất video','Edit video','Edit video trên CapCut',4],
+ ['CHUYÊN MÔN','Quản lý & tối ưu quảng cáo','Set camp, care camp; theo dõi, đo lường & tối ưu ngân sách','Tạo & nhân camp; xử lý số/dữ liệu; Excel',4],
+ ['QUẢN LÝ','Đào tạo, chia sẻ','Hướng dẫn & đào tạo cho các thành viên trong team','Phản biện; diễn đạt tốt; sẵn sàng chia sẻ giá trị',3],
+ ['QUẢN LÝ','Giao việc, giám sát, báo cáo','Bao quát các đầu việc của team & giao việc cho đúng người','Tư duy tổng quát; nhìn người, giao đúng việc – đúng người',3],
+ ['QUẢN LÝ','Giao việc, giám sát, báo cáo','Giám sát, hỗ trợ quá trình thực hiện & xử lý các vấn đề phát sinh','Quan sát, lắng nghe, tìm tòi, giải quyết vấn đề',3],
+ ['QUẢN LÝ','Giao việc, giám sát, báo cáo','Lắng nghe báo cáo từ thành viên, tổng hợp & báo cáo cho cấp trên','Tổng hợp, phân tích, báo cáo',3],
+ ['CHUNG','Hợp tác & phối hợp nội bộ','Kết nối các thành viên với nhau & với các phòng ban khác để đạt mục tiêu chung','Giao tiếp, làm việc nhóm; gắn kết, chia sẻ, đồng cảm',3]
+];
+const lvBadge=n=>`<span class="lvbadge">${n}</span>`;
+function mtcvCell(cat,area){return `<span class="cat ${catCls[cat]}">${cat}</span><div style="margin-top:6px;font-size:12px;color:var(--muted)">${area}</div>`;}
+function renderMtcvNV(){
+  return `<div class="tbl-wrap"><table class="jt"><thead><tr>
+    <th class="stt">#</th><th>Mảng chức năng</th><th>Mô tả công việc</th><th>Kỹ năng / năng lực cần có</th><th class="lvc">NV</th><th class="lvc">CV</th></tr></thead><tbody>
+    ${MTCV_NV.map((r,i)=>`<tr><td class="stt">${i+1}</td><td>${mtcvCell(r[0],r[1])}</td><td class="desc">${r[2]}</td><td>${r[3]}</td><td class="lvc">${lvBadge(r[4])}</td><td class="lvc">${lvBadge(r[5])}</td></tr>`).join('')}
+    </tbody></table></div>`;
+}
+function renderMtcvLead(){
+  return `<div class="tbl-wrap"><table class="jt"><thead><tr>
+    <th class="stt">#</th><th>Mảng chức năng</th><th>Mô tả công việc</th><th>Kỹ năng / năng lực cần có</th><th class="lvc">Cấp độ</th></tr></thead><tbody>
+    ${MTCV_LEAD.map((r,i)=>`<tr><td class="stt">${i+1}</td><td>${mtcvCell(r[0],r[1])}</td><td class="desc">${r[2]}</td><td>${r[3]}</td><td class="lvc">${lvBadge(r[4])}</td></tr>`).join('')}
+    </tbody></table></div>`;
+}
+
+/* ---------- SECTIONS ---------- */
+const SECTIONS=[
+{id:'tongquan',group:'TỔNG QUAN',icon:'▥',label:'Tổng quan hệ thống',render:()=>`
+  <span class="eyebrow">Tổng quan</span>
+  <h1 class="title">Lộ trình Thăng tiến<br>Bộ phận Marketing</h1>
+  <p class="lead">Khung phát triển sự nghiệp minh bạch cho đội ngũ Marketing tại KEECOM — từ Nhân viên đến Leader, với tiêu chí cụ thể và khung năng lực 4 cấp độ.<br>Xét đánh giá <b>vào cuối mỗi quý</b>.</p>
+  <div class="stats">
+    <div class="stat"><div class="num">5</div><div class="lb">Vị trí</div><div class="sub">trong hệ thống MKT</div></div>
+    <div class="stat"><div class="num">11</div><div class="lb">Năng lực</div><div class="sub">được đưa ra đánh giá</div></div>
+    <div class="stat"><div class="num">4</div><div class="lb">Cấp độ</div><div class="sub">mỗi năng lực</div></div>
+    <div class="stat"><div class="num">Mỗi quý</div><div class="lb">Chu kỳ</div><div class="sub">xét thăng tiến</div></div>
+  </div>
+  <div class="block-h"><span class="pill">Lộ trình thăng tiến chính thức</span></div>
+  <div class="ladder" style="grid-template-columns:repeat(7,1fr)">
+    <div class="rung r0"><div class="tag">Thử việc</div><div class="nm">2 tháng</div></div>
+    <div class="rung r1"><div class="tag">Cấp 1</div><div class="nm">NVCT</div></div>
+    <div class="rung r2"><div class="tag">Cấp 2</div><div class="nm">Chuyên viên</div></div>
+    <div class="rung r3"><div class="tag">Chặng đệm</div><div class="nm">Thử thách Lead</div><div class="pay">6 tháng</div></div>
+    <div class="rung r4"><div class="tag">Cấp 3</div><div class="nm">Leader</div></div>
+    <div class="rung r5"><div class="tag">Cấp 4</div><div class="nm">Director</div></div>
+    <div class="rung r5"><div class="tag">Cấp 5</div><div class="nm">CMO</div></div>
+  </div>
+
+  <div class="block-h"><span class="pill">Các vị trí MKT</span><span class="sub">5 vị trí · tỷ trọng quản lý tăng dần theo cấp bậc</span></div>
+  <div class="career">${[
+    ['Nhân viên MKT','Thực thi','Làm các đầu việc được giao: Content, thiết kế, chạy ads, trade marketing.','100% thực thi','b-green','var(--green)'],
+    ['Chuyên viên MKT','Thực thi nâng cao','Content, thiết kế, chạy ads, trade marketing với chất lượng & sản lượng cao hơn.','100% thực thi (chất lượng cao)','b-blue','var(--blue)'],
+    ['Trưởng nhóm MKT — Leader','Vừa quản lý vừa thực thi','Quản lý nhóm Content / Ads / Design / SEO; phân việc; lập plan; đào tạo; giám sát; vẫn trực tiếp làm như chuyên viên.','20% quản lý · 80% chuyên môn','b-purple','var(--purple)'],
+    ['Trưởng phòng MKT — Director','Quản trị marketing','Lập kế hoạch marketing; quản lý branding; quản lý marketing-mix (4Ps, 7Ps).','80% quản lý · 20% chuyên môn','b-amber','var(--amber)'],
+    ['Giám đốc MKT — CMO','Chiến lược marketing','Nghiên cứu thị trường; xây chiến lược STP; tìm kiếm & mở rộng đại dương mới.','100% chiến lược','b-red','var(--red)']
+  ].map((r,i,a)=>`<div class="pcard" style="border-top-color:${r[5]}"><div class="pnum" style="background:${r[5]}">${i+1}</div><h4>${r[0]}</h4><div class="role">${r[1]}</div><span class="badge ${r[4]}">${r[3]}</span><p>${r[2]}</p></div>${i<a.length-1?'<div class="parrow">→</div>':''}`).join('')}</div>
+
+  <div class="block-h"><span class="pill">Thuật ngữ thường dùng</span><span class="sub">các từ lặp lại xuyên suốt tài liệu</span></div>
+  <div class="two">
+    <div class="card"><h3>Bài / chiến dịch "win"</h3><p class="d">Bài hoặc chiến dịch quảng cáo đạt hiệu quả — ra đơn / doanh thu với chi phí nằm trong ngưỡng cho phép (mức cụ thể theo công ty quy định từng thời điểm).</p></div>
+    <div class="card"><h3>Data / lead xác thực</h3><p class="d">Thông tin khách hàng thật, đã xác minh: có liên hệ thật, không trùng lặp, không ảo.</p></div>
+    <div class="card"><h3>KNL — Khung năng lực</h3><p class="d">Bộ năng lực đánh giá theo 4 cấp độ cho mỗi kỹ năng. Mức cấp độ do Leader chấm khi xét duyệt.</p></div>
+    <div class="card"><h3>Camp / care camp</h3><p class="d">"Camp" = chiến dịch quảng cáo; "care camp" = theo dõi, chăm sóc & tối ưu chiến dịch đang chạy.</p></div>
+  </div>`},
+
+{id:'tieuchi',group:'LỘ TRÌNH',icon:'◎',label:'Tiêu chí thăng tiến',render:()=>`
+  <span class="eyebrow">Lộ trình</span><h1 class="title">Tiêu chí thăng tiến</h1>
+  <div class="legend">
+    <span class="lg"><span class="lgd" style="background:var(--red)"></span><b>Bắt buộc</b> — phải đạt</span>
+    <span class="lg"><span class="lgd" style="background:var(--green)"></span><b>Khuyến khích</b> — có trọng số khi xét duyệt</span>
+  </div>
+  <p class="lead" style="margin-bottom:18px"><span style="color:var(--muted);font-size:14px">Bấm từng chặng để xem chi tiết.</span></p>
+
+  <div class="cmp open"><div class="hd" onclick="this.parentElement.classList.toggle('open')">
+    <div class="idx" style="background:var(--green)">1</div>
+    <div class="ti"><div class="gn">Chặng 1</div><div class="nn">Thử việc → Nhân viên chính thức</div></div>
+    <div class="chev">▼</div></div>
+    <div class="bd"><div class="two">
+      <div class="card"><h3>Bắt buộc <span class="badge b-red">Phải đạt</span></h3>
+        <ul class="crit">
+          <li><span class="dot dot-r"></span><span>Hoàn thành đủ <b>2 tháng thử việc</b></span></li>
+          <li><span class="dot dot-r"></span><span>Có ≥ 1 <b>bài content win</b> trong tháng (thu về ≥ <b>100 data/ngày</b>, lead xác thực, chi phí ads trong ngày <b>< 40%</b>)</span></li>
+          <li><span class="dot dot-r"></span><span>Tỷ lệ <b>chi phí quảng cáo ÷ doanh thu</b> < <b>40%</b> cả tháng</span></li>
+          <li><span class="dot dot-r"></span><span>Review sách <b>ít nhất 1 lần</b></span></li>
+        </ul></div>
+      <div class="note"><h4>Lưu ý xử lý</h4>
+        <ul><li>Chưa đạt sau 2 tháng → gia hạn tối đa 1 tháng rồi đánh giá lại</li>
+        <li>Đánh giá ngay sau 2 tháng, không chờ cuối quý</li></ul></div>
+    </div></div></div>
+
+  <div class="cmp"><div class="hd" onclick="this.parentElement.classList.toggle('open')">
+    <div class="idx" style="background:var(--blue)">2</div>
+    <div class="ti"><div class="gn">Chặng 2 · đạt 1 trong 3 tiêu chí</div><div class="nn">Nhân viên → Chuyên viên</div></div>
+    <div class="chev">▼</div></div>
+    <div class="bd">
+      <p class="d" style="margin:0 0 14px">Để lên Chuyên viên cần thoả mãn <b>đồng thời</b>: đạt <b>1 trong 3 tiêu chí</b> (về doanh số hoặc năng lực) <b>VÀ</b> điều kiện về <b>review sách</b> như sau:</p>
+      <div class="orset">
+        <div class="orcard" style="border-top-color:var(--red)">
+          <div class="oh"><div class="onum" style="background:var(--red)">1</div><div class="ot">Doanh số bứt phá</div></div>
+          <p>Trong 6 tháng gần nhất, có <b>2 tháng có tổng doanh số ≥ 1,8 tỷ</b>, trong đó ít nhất <b>1 tháng ≥ 400tr</b>.</p></div>
+        <div class="orjoin">HOẶC</div>
+        <div class="orcard" style="border-top-color:var(--amber)">
+          <div class="oh"><div class="onum" style="background:var(--amber)">2</div><div class="ot">Doanh số ổn định</div></div>
+          <p>Trong 6 tháng gần nhất, có ít nhất <b>3 tháng ≥ 500tr/tháng</b>.</p></div>
+        <div class="orjoin">HOẶC</div>
+        <div class="orcard" style="border-top-color:var(--purple)">
+          <div class="oh"><div class="onum" style="background:var(--purple)">3</div><div class="ot">Năng lực chuyên môn</div></div>
+          <p>Đạt <b>5/7 kỹ năng</b> trong khung năng lực ở <b>cấp độ 4</b>.</p></div>
+      </div>
+      <div class="andbar"><div class="ab">VÀ</div><div class="at"><b>Review sách</b>: <b>ít nhất 1 lần</b> (tính từ khi lên vị trí nhân viên).</div></div>
+      <div class="note" style="margin-top:14px"><b>Sau khi lên Chuyên viên — điều kiện duy trì:</b> trong 3 tháng liên tiếp, phải có ít nhất 1 tháng đạt doanh số <b>400tr trở lên</b>.</div>
+    </div></div>
+
+  <div class="cmp"><div class="hd" onclick="this.parentElement.classList.toggle('open')">
+    <div class="idx" style="background:var(--amber)" title="Chặng 2.5">2.5</div>
+    <div class="ti"><div class="gn">Chặng 2.5 — Chặng đệm</div><div class="nn">Chuyên viên → Thử thách Lead</div></div>
+    <div class="chev">▼</div></div>
+    <div class="bd">
+    <div class="note" style="margin-bottom:14px"><b>Kết quả xét duyệt = 50% điều kiện số liệu + 50% quản lý xét duyệt.</b></div>
+    <ul class="crit">
+      <li><span class="dot dot-a"></span><span><b>Điều kiện cần để đăng ký thử thách Lead:</b> đạt <b>TOP 3 doanh số</b> ở <b>ít nhất 1 trong 2 quý gần nhất</b> (không bắt buộc cả 2 quý)</span></li>
+    </ul></div></div>
+
+  <div class="cmp"><div class="hd" onclick="this.parentElement.classList.toggle('open')">
+    <div class="idx" style="background:var(--purple)">4</div>
+    <div class="ti"><div class="gn">Chặng 4 · 6 tháng thử thách</div><div class="nn">Thử thách Lead → Leader</div></div>
+    <div class="chev">▼</div></div>
+    <div class="bd">
+    <div class="note" style="margin-bottom:14px"><b>Kết quả xét duyệt = 50% điều kiện số liệu + 50% quản lý xét duyệt.</b></div>
+    <div class="two">
+      <div class="card"><h3>Bắt buộc <span class="badge b-purple">Phải đạt</span></h3>
+        <ul class="crit">
+          <li><span class="dot" style="background:var(--purple)"></span><span><b>6 tháng</b> đạt min 400tr/tháng</span></li>
+          <li><span class="dot" style="background:var(--purple)"></span><span>Có <b>2 tháng</b> đạt doanh số min 800tr/tháng</span></li>
+          <li><span class="dot" style="background:var(--purple)"></span><span><b>Hướng dẫn thành công 2 bạn</b> lên chính thức</span></li>
+          <li><span class="dot" style="background:var(--purple)"></span><span>Review sách <b>ít nhất 3 lần</b> (toàn công ty tham gia chấm điểm) + đọc xong 3–5 cuốn sách BGĐ đề ra</span></li>
+        </ul></div>
+      <div class="card"><h3>Khuyến khích <span class="badge b-green">Cộng điểm</span></h3>
+        <ul class="crit">
+          <li><span class="dot dot-g"></span><span>Chủ động chia sẻ hệ thống, quy trình cá nhân với team</span></li>
+          <li><span class="dot dot-g"></span><span>KNL đạt <b>mức 4 toàn bộ 7 nhóm năng lực Nhân viên</b> + <b>≥ 2 nhóm năng lực Leader</b></span></li>
+        </ul></div>
+    </div>
+    <div class="note" style="margin-top:14px;border-left:4px solid var(--green)"><b>🤝 Nguyên tắc dẫn dắt & phát triển nhân sự:</b> Công ty luôn ưu tiên nguyên tắc <b>nhân sự của team nào sẽ phát triển thuộc team đó</b>. Tuy nhiên, nếu Leader không đủ khả năng dẫn dắt — đặc biệt ở khâu <b>định hướng phát triển</b> — nhân sự bên dưới có khả năng rời công ty. Để không mất đi nhân sự chất lượng, nếu <b>Leader và nhân sự đều đồng thuận</b> rằng việc chuyển nhóm sẽ tạo cơ hội phát triển tốt hơn, công ty sẽ tạo điều kiện để nhân sự chuyển sang nhóm khác, tiếp tục phát triển trong môi trường công ty.</div>
+    </div></div>
+
+  <div class="block-h"><span class="pill">Nguyên tắc chung — áp cho mọi cấp</span></div>
+  <div class="mech">
+    <div class="m"><div class="ico">⚖️</div><h4>Cách tính kết quả</h4><p><b style="color:var(--green)">NV / Chuyên viên:</b> đánh giá chính ở số liệu.<br><b style="color:var(--purple)">Leader trở lên:</b> 50% từ điều kiện số liệu + 50% từ quản lý xét duyệt.</p></div>
+    <div class="m"><div class="ico">★</div><h4>Chấm khung năng lực</h4><p>Do Leader trực tiếp quyết định chấm.</p></div>
+    <div class="m"><div class="ico">📖</div><h4>Review sách</h4><p><b style="color:var(--purple)">Riêng cấp Leader:</b> BLĐ + nhân viên cùng chấm, tỷ lệ 50–50. Trên 70đ là đạt.</p></div>
+    <div class="m"><div class="ico">🤝</div><h4>Bảo lãnh</h4><p>Người bảo lãnh giúp nhân sự lên cấp cao hơn dù còn thiếu một số tiêu chí.</p></div>
+  </div>
+
+  <div class="block-h"><span class="pill" style="background:var(--green)">Tổng quan Chính sách lương cứng & hoa hồng theo cấp bậc</span></div>
+  <div class="tbl-wrap"><table class="jt"><thead><tr><th>Cấp bậc</th><th>Giai đoạn</th><th>Lương cứng</th><th>Cơ chế hoa hồng</th><th>Ghi chú</th></tr></thead><tbody>
+    <tr><td><span class="badge b-gray">Thử việc</span></td><td>2 tháng</td><td class="desc">85% lương cơ bản</td><td>Hoa hồng doanh số cá nhân</td><td>Áp dụng cho NV mới vào</td></tr>
+    <tr><td><span class="badge b-green">Cấp 1 · Nhân viên</span></td><td>Chính thức</td><td class="desc">8.000.000đ</td><td>Hoa hồng doanh số cá nhân</td><td>Sau khi pass thử việc</td></tr>
+    <tr><td><span class="badge b-blue">Cấp 2 · Chuyên viên</span></td><td>Chính thức</td><td class="desc">10.000.000đ</td><td>Hoa hồng doanh số cá nhân</td><td>Sau khi đạt tiêu chí Chặng 2</td></tr>
+    <tr><td><span class="badge b-amber">Chặng đệm</span></td><td>6 tháng thử thách Lead</td><td class="desc">Giữ lương CV (10tr)</td><td>Hoa hồng doanh số cá nhân + 50% hoa hồng team (nếu hướng dẫn thành công nhân sự lên NVCT)</td><td>Chưa lên Leader chính thức</td></tr>
+    <tr><td><span class="badge b-purple">Cấp 3 · Leader</span></td><td>Chính thức</td><td class="desc">15.000.000đ</td><td>Hoa hồng doanh số cá nhân + 50% hoa hồng team</td><td>Sau khi hoàn thành 6 tháng thử thách</td></tr>
+    <tr><td><span class="badge b-red">Cấp 4–5 · Director / CMO</span></td><td>Chính thức</td><td class="desc">Thoả thuận</td><td>Thoả thuận</td><td>Theo năng lực & quy mô quản lý</td></tr>
+  </tbody></table></div>
+  <div class="note" style="margin-top:10px;font-size:13px">💡 Xem chi tiết cơ chế hoa hồng tại trang <span onclick="show('hoahong')" style="color:var(--blue-d);font-weight:600;text-decoration:underline;cursor:pointer"><b>Chính sách tính hoa hồng chi tiết</b></span> (bảng Facebook, TikTok, mức trừ khi vượt ngưỡng ads, cách tính bán kèm).</div>`},
+
+{id:'hoahong',group:'LỘ TRÌNH',icon:'💰',label:'Chính sách tính hoa hồng chi tiết',render:()=>{
+  const fb=[['dưới 300tr','0%','0%','0','0'],['300tr','0,6%','0,1%','1.800.000','300.000'],['500tr','0,9%','0,1%','4.500.000','500.000'],['800tr','1,0%','0,1%','8.000.000','800.000'],['1 tỷ','1,1%','0,12%','11.000.000','1.200.000'],['1,2 tỷ','1,2%','0,12%','14.400.000','1.440.000'],['1,5 tỷ','1,3%','0,15%','19.500.000','2.250.000'],['1,8 tỷ','1,45%','0,15%','26.100.000','2.700.000'],['2 tỷ','1,6%','0,18%','32.000.000','3.600.000'],['3 tỷ','1,9%','0,18%','57.000.000','5.400.000'],['trên 3 tỷ','1,9%','0,18%','—','—']];
+  const tt=[['dưới 300tr','0%','0%','0','0'],['300tr','0,4%','0,1%','1.200.000','300.000'],['500tr','0,6%','0,1%','3.000.000','500.000'],['800tr','0,8%','0,1%','6.400.000','800.000'],['1 tỷ','1,0%','0,12%','10.000.000','1.200.000'],['1,2 tỷ','1,1%','0,12%','13.200.000','1.440.000'],['1,5 tỷ','1,2%','0,15%','18.000.000','2.250.000'],['1,8 tỷ','1,35%','0,15%','24.300.000','2.700.000'],['2 tỷ','1,5%','0,18%','30.000.000','3.600.000'],['3 tỷ','1,7%','0,18%','51.000.000','5.400.000'],['trên 3 tỷ','1,8%','0,18%','—','—']];
+  const vuot=[['Không vượt','0%','5%'],['lớn hơn','0%','5%'],['lớn hơn','1%','15%'],['lớn hơn','2%','30%'],['lớn hơn','3%','50%'],['lớn hơn','4%','70%'],['lớn hơn','5%','85%'],['lớn hơn','6%','100%']];
+  const bk=[['< 35%','Tính doanh số theo bảng cơ chế hiện tại + áp dụng thưởng tối ưu'],['35–45%','Tính doanh số, thưởng tương đương mức 35% theo bảng cơ chế hiện tại (không trừ vượt, không thưởng tối ưu)'],['> 45%','Không tính doanh số và chi phí sản phẩm đó']];
+  const renderTbl=(arr)=>`<div class="tbl-wrap"><table class="jt"><thead><tr><th>Doanh số</th><th>% Hoa hồng tháng</th><th>Thưởng tháng (VNĐ)</th></tr></thead><tbody>${arr.map(r=>`<tr><td class="desc">${r[0]}</td><td>${r[1]}</td><td>${r[3]}</td></tr>`).join('')}</tbody></table></div>`;
+  return `<span class="eyebrow">Lộ trình</span><h1 class="title">Chính sách hoa hồng MKT</h1>
+  <p class="lead" style="max-width:none">Áp dụng cho <b>tất cả sản phẩm</b>. Hoa hồng tính theo doanh số tháng, kèm thưởng cuối năm. Có 2 bảng riêng cho <b>Facebook</b> và <b>TikTok</b>, kèm cơ chế trừ khi vượt ngưỡng chi phí ads và bảng cộng thưởng tối ưu.</p>
+
+  <div class="note" style="margin-bottom:18px;border-left:4px solid var(--amber)">📌 <b>Lưu ý:</b> Chính sách có thể điều chỉnh tuỳ biến động thị trường. Nếu có thay đổi, sẽ thông báo trước ngày <b>mùng 1 tháng kế tiếp</b>.</div>
+
+  <div class="coll"><div class="block-h" onclick="this.parentElement.classList.toggle('closed')"><span class="pill">1. Bảng hoa hồng — Facebook</span><span class="cv">▼</span></div>
+  <div class="collbody">${renderTbl(fb)}</div></div>
+
+  <div class="coll closed" style="margin-top:14px"><div class="block-h" onclick="this.parentElement.classList.toggle('closed')"><span class="pill" style="background:var(--purple)">2. Bảng hoa hồng — TikTok</span><span class="cv">▼</span></div>
+  <div class="collbody">${renderTbl(tt)}</div></div>
+
+  <div class="coll closed" style="margin-top:14px"><div class="block-h" onclick="this.parentElement.classList.toggle('closed')"><span class="pill" style="background:var(--red)">3. Mức trừ khi vượt ngưỡng chi phí ads</span><span class="cv">▼</span></div>
+  <div class="collbody">
+  <div class="note" style="margin-bottom:14px;border-left:4px solid var(--red)"><b>Ngưỡng chi phí ads quy định:</b><br>• Sản phẩm <b>test win: 35%</b> — vượt 35% áp dụng bảng trừ hoa hồng bên dưới<br>• Khoản trừ áp dụng <b>trên phần hoa hồng nhận được</b></div>
+  <div class="tbl-wrap"><table class="jt"><thead><tr><th>Mốc vượt</th><th>Mức trừ hoa hồng</th><th>Thưởng tối ưu</th></tr></thead><tbody>
+    ${vuot.map((r,i)=>`<tr><td class="desc">${r[0]}${i===0?' <span class="badge b-green">Đạt</span>':''}</td><td>${r[1]}</td><td>${r[2]}</td></tr>`).join('')}
+  </tbody></table></div>
+  <div class="note" style="margin-top:10px"><b>Ngưỡng cụ thể từng mốc "lớn hơn"</b> sẽ được BLĐ chốt & bổ sung sau khi áp dụng chính thức.</div>
+  </div></div>
+
+  <div class="coll closed" style="margin-top:14px"><div class="block-h" onclick="this.parentElement.classList.toggle('closed')"><span class="pill" style="background:var(--green)">4. Cách tính cho sản phẩm bán kèm</span><span class="cv">▼</span></div>
+  <div class="collbody">
+  <div class="tbl-wrap"><table class="jt"><thead><tr><th style="width:160px">Mức ADS</th><th>Cách tính thưởng</th></tr></thead><tbody>
+    ${bk.map(r=>`<tr><td class="desc">${r[0]}</td><td>${r[1]}</td></tr>`).join('')}
+  </tbody></table></div>
+  </div></div>`}},
+
+{id:'lotrinh',group:'LỘ TRÌNH',icon:'▶',label:'Lộ trình 12 tháng tham khảo',render:()=>`
+  <span class="eyebrow">Lộ trình</span><h1 class="title">Lộ trình 12 tháng tham khảo</h1>
+  <p class="lead">Hành trình tham khảo từ thử việc đến Chuyên viên và hướng lên Leader. Thực tế có thể nhanh hơn hoặc chậm hơn tuỳ năng lực.</p>
+  <div class="phase"><span class="lbl" style="background:var(--blue)">Giai đoạn 1 — Nền tảng (Tháng 1–2)</span>
+    <div class="tl">
+      <div class="col"><div class="t">Tuần 1–2</div><div class="s">Onboarding</div><ul><li>Học hệ thống ads đang chạy</li><li>Shadow người hướng dẫn</li><li>Nắm sản phẩm & KH mục tiêu</li></ul></div>
+      <div class="col"><div class="t">Tuần 3–4</div><div class="s">Thực chiến đầu tiên</div><ul><li>Tự chạy campaign đầu tiên</li><li>Đạt 50–70 data/ngày</li><li>Tìm hiểu tệp KH thực tế</li></ul></div>
+      <div class="col"><div class="t">Tháng 2</div><div class="s">Đánh giá thử việc</div><ul><li>Có ≥ 1 bài win (≥ 100 data/ngày, ads < 40% trong ngày)</li><li>Ads < 40% cả tháng</li><li>Review sách ≥ 1 lần</li></ul></div>
+      <div class="col"><div class="t">KPI bắt buộc</div><div class="s">Ngưỡng tối thiểu</div><ul><li>1 bài win đạt 100 data/ngày & ads < 40% trong ngày</li><li>Ads < 40% cả tháng</li><li>Review sách ≥ 1 lần</li></ul></div>
+    </div></div>
+  <div class="phase"><span class="lbl" style="background:var(--green)">Giai đoạn 2 — Tăng tốc (Tháng 3–6)</span>
+    <div class="tl">
+      <div class="col"><div class="t">Tháng 3–4</div><div class="s">Ổn định</div><ul><li>Tự chủ chạy & tối ưu camp</li><li>Bắt đầu test sản phẩm</li></ul></div>
+      <div class="col"><div class="t">Tháng 5</div><div class="s">Nâng chất lượng</div><ul><li>Nâng năng lực lên cấp 3–4</li><li>Tăng sản lượng bài win</li></ul></div>
+      <div class="col"><div class="t">Tháng 6 · Review Q2</div><div class="s">Đánh giá quý</div><ul><li>Xét tiêu chí lên Chuyên viên</li><li>Đạt 1 trong 3 tiêu chí lên CV</li></ul></div>
+      <div class="col"><div class="t">Mục tiêu chính</div><div class="s">Hướng tới CV</div><ul><li>Đủ điều kiện lên CV (1 trong 3 tiêu chí)</li><li>Review sách ≥ 1 lần</li><li>Chủ động đề xuất phương án</li></ul></div>
+    </div></div>
+  <div class="phase"><span class="lbl" style="background:var(--amber)">Giai đoạn 3 — Chuyên viên (Tháng 7–9)</span>
+    <div class="tl">
+      <div class="col"><div class="t">Tháng 7–8</div><div class="s">Vào vai trò CV</div><ul><li>Nhận vai trò & lương Chuyên viên</li><li>Nâng sản lượng & chất lượng</li><li>Duy trì doanh số (≥ 1/3 tháng đạt 400tr)</li></ul></div>
+      <div class="col"><div class="t">Tháng 9</div><div class="s">Vững chuyên môn</div><ul><li>Tự chủ test sản phẩm mới</li><li>Làm chủ file dữ liệu</li><li>Bắt đầu hỗ trợ NV mới</li></ul></div>
+      <div class="col"><div class="t">Review Q3</div><div class="s">Đánh giá quý</div><ul><li>Xét điều kiện duy trì CV</li><li>(3 tháng có ≥ 1 tháng đạt 400tr)</li></ul></div>
+      <div class="col"><div class="t">Mục tiêu chính</div><div class="s">Hướng tới Lead</div><ul><li>Giữ năng lực chuyên môn cấp 4</li><li>Tích luỹ thành tích TOP doanh số</li><li>Tích luỹ review sách (hướng mốc 3 lần)</li></ul></div>
+    </div></div>
+  <div class="phase"><span class="lbl" style="background:var(--purple)">Giai đoạn 4 — Hướng Lead (Tháng 10–12)</span>
+    <div class="tl">
+      <div class="col"><div class="t">Tháng 10–11</div><div class="s">Bứt tốc doanh số</div><ul><li>Vào nhóm TOP doanh số của team</li><li>Giữ doanh số đều, ổn định</li><li>Quan sát & học kỹ năng quản lý từ Leader</li></ul></div>
+      <div class="col"><div class="t">Tháng 12 · Review Q4</div><div class="s">Đánh giá năm</div><ul><li>Xét TOP 3 doanh số (≥1/2 quý gần nhất)</li><li>Đánh giá tổng năng lực</li></ul></div>
+      <div class="col"><div class="t">Đăng ký Thử thách Lead</div><div class="s">Ngưỡng điều kiện</div><ul><li>Đạt TOP 3 doanh số ở ít nhất 1 trong 2 quý gần nhất</li></ul></div>
+      <div class="col"><div class="t">Mục tiêu chính</div><div class="s">Đủ điều kiện vào Thử thách Lead</div><ul><li>Đạt TOP 3 doanh số ≥1/2 quý gần nhất</li><li>Sẵn sàng vào 6 tháng thử thách</li><li><i>(800tr, kèm 2 bạn, review 3 lần — làm trong giai đoạn thử thách)</i></li></ul></div>
+    </div></div>`},
+
+{id:'knl-nv',group:'KHUNG NĂNG LỰC',icon:'▦',label:'Năng lực Nhân viên MKT',render:()=>`
+  <span class="eyebrow">Khung năng lực</span><h1 class="title">Năng lực — Nhân viên MKT</h1>
+  <p class="lead" style="max-width:none"><b>7 năng lực</b> theo 4 cấp độ. Nhân viên cần đạt phần lớn ở <b>cấp 3</b>; Chuyên viên hướng tới <b>cấp 4</b>. Đạt <b>cấp 4 ở 5/7 kỹ năng</b> là một trong các điều kiện lên Chuyên viên — mức cấp độ do <b>Leader chấm</b> khi xét duyệt.</p>
+  <div class="coll"><div class="block-h" onclick="this.parentElement.classList.toggle('closed')"><span class="pill">Mô tả công việc</span><span class="sub">7 đầu việc · yêu cầu cấp độ Nhân viên (NV) vs Chuyên viên (CV)</span><span class="cv">▼</span></div>
+  <div class="collbody">${renderMtcvNV()}</div></div>
+  <div class="block-h"><span class="pill">Khung năng lực 4 cấp độ</span><span class="sub">7 năng lực · cuộn ngang để xem đủ 4 cấp</span></div>
+  ${renderCompTable(COMP.filter(c=>!c.leader))}`},
+
+{id:'knl-lead',group:'KHUNG NĂNG LỰC',icon:'★',label:'Năng lực Leader MKT',render:()=>`
+  <span class="eyebrow">Khung năng lực</span><h1 class="title">Năng lực — Leader MKT</h1>
+  <p class="lead" style="max-width:none"><b>11 năng lực</b>: 6 chuyên môn + 1 giao tiếp (giống nhân viên) và <b>4 năng lực quản lý</b> bổ sung. Leader cần chuyên môn ở cấp 4, quản lý ở cấp 3.</p>
+  <div class="coll"><div class="block-h" onclick="this.parentElement.classList.toggle('closed')"><span class="pill">Mô tả công việc</span><span class="sub">11 đầu việc · yêu cầu cấp độ</span><span class="cv">▼</span></div>
+  <div class="collbody">${renderMtcvLead()}</div></div>
+  <div class="block-h"><span class="pill">Khung năng lực 4 cấp độ</span><span class="sub">11 năng lực · cuộn ngang để xem đủ 4 cấp</span></div>
+  ${renderCompTable(COMP)}`},
+
+{id:'danhgia',group:'VẬN HÀNH',icon:'✓',label:'Quy trình đánh giá',render:()=>{
+  const steps=[
+   ['Nhân viên tự đánh giá (trước review cuối quý 2 tuần)',['Hoàn thành biểu mẫu tự đánh giá theo từng năng lực, bao gồm:<ul style="list-style:none;margin:4px 0 0 14px;font-size:12px;color:var(--muted)"><li style="padding:2px 0">– Liệt kê thành tích nổi bật trong kỳ</li><li style="padding:2px 0">– Đề xuất cấp bậc kỳ vọng kỳ tới</li><li style="padding:2px 0">– Nêu nhu cầu phát triển cần hỗ trợ</li></ul>','Gửi cho Leader trực tiếp trước deadline']],
+   ['Leader xác nhận số liệu và bổ sung đánh giá',['Review kết quả theo chỉ tiêu & doanh số','Đánh giá từng năng lực theo thang 1–4 (Leader quyết định)','Ghi chú minh chứng cụ thể từng tiêu chí','Thu thập thêm nhận xét từ các thành viên khác trong team (đối với cấp Leader trở lên)']],
+   ['Buổi gặp 1-1 đánh giá',['Chia sẻ kết quả cởi mở, hai chiều','Thảo luận điểm mạnh & vùng cần cải thiện','Đồng thuận về cấp bậc và định hướng','Cập nhật kế hoạch phát triển cho quý tiếp theo']],
+   ['HRM tổng hợp toàn bộ hồ sơ thăng tiến',['Kiểm tra đủ điều kiện theo khung','Chuẩn bị tờ trình với mức lương mới đề xuất']],
+   ['BGĐ phê duyệt danh sách thăng tiến',['Xem xét và phê duyệt','Hội đồng gồm: HR + Giám đốc + Trưởng bộ phận','Quyết định dựa trên năng lực & nhu cầu tổ chức','Cần thêm thông tin: HRM và Leader giải trình trong 3 ngày làm việc']],
+   ['Thông báo kết quả và cập nhật hợp đồng',['HRM thông báo kết quả & điều chỉnh lương/hoa hồng rõ ràng tới nhân sự','Với NV chưa thăng tiến: gặp 1-1 nêu rõ điểm thiếu và kế hoạch cải thiện','Lương mới từ ngày 1 của tháng đầu quý tiếp theo','Cập nhật hợp đồng/phụ lục trước ngày hiệu lực']]
+  ];
+  const cal=[['Tháng 3','Review Q1','15/3'],['Tháng 6','Review Q2','15/6'],['Tháng 9','Review Q3','15/9'],['Tháng 12','Review Q4','15/12']];
+  return `<span class="eyebrow">Vận hành</span><h1 class="title">Quy trình đánh giá</h1>
+  <p class="lead">Quy trình chuẩn đảm bảo mọi quyết định thăng tiến đều minh bạch, công bằng và có căn cứ số liệu.</p>
+  <div class="block-h"><span class="pill">6 bước thực hiện mỗi kỳ đánh giá</span></div>
+  <div class="flow">${steps.map((s,i)=>`<div class="fstep"><div class="fn"><div class="nm">${i+1}</div><h4>${s[0]}</h4></div><ul>${s[1].map(x=>`<li>${x}</li>`).join('')}</ul></div>`).join('')}</div>
+
+  <div class="block-h"><span class="pill" style="background:var(--green)">Lịch các kỳ đánh giá trong năm</span></div>
+  <p class="d" style="margin:-6px 0 14px;color:var(--ink-2);font-size:14px"><b>2 hình thức song song:</b> đánh giá định kỳ cuối quý (cố định) và cơ chế tự đề xuất thăng cấp (linh hoạt).</p>
+
+  <div class="card" style="margin-bottom:14px">
+    <h3>📅 Đánh giá định kỳ cuối quý <span class="badge b-green">Cố định</span></h3>
+    <p class="d" style="margin-top:6px">Áp dụng cho toàn bộ nhân sự, diễn ra cuối mỗi quý theo lịch cố định:</p>
+    <div class="g4" style="margin-top:14px">${cal.map(c=>`<div style="text-align:center;background:var(--bg);border:1px solid var(--line);border-radius:10px;padding:14px"><div style="font-size:15px;font-weight:700">${c[0]}</div><div class="role" style="margin-top:4px">${c[1]} (cố định)</div><div style="font-size:12.5px;color:var(--muted);margin-top:4px">Hạn nộp: ${c[2]}</div></div>`).join('')}</div>
+  </div>
+
+  <div class="card" style="border-left:4px solid var(--purple)">
+    <h3>⚡ Cơ chế tự đề xuất thăng cấp <span class="badge b-purple">Không cần chờ kỳ đánh giá</span></h3>
+    <p class="d" style="margin-top:6px">Khi nhân sự tự thấy mình đã <b>đủ năng lực & tiêu chí</b> để thăng cấp, có thể chủ động <b>làm phiếu đề xuất</b>, không cần đợi đến cuối quý.</p>
+  </div>
+
+  <div class="block-h"><span class="pill" style="background:var(--green)">Kênh phản hồi ngược — nhân viên đánh giá lại tổ chức</span></div>
+  <div class="note" style="border-left:4px solid var(--green)">
+    <p style="margin-bottom:10px;color:var(--ink)">Đánh giá không chỉ là công ty nhìn vào nhân viên — nhân viên cũng có quyền và được khuyến khích nói thẳng về những điều chưa ổn. Đây là cách KEECOM giữ hệ thống luôn công bằng và phát triển được.</p>
+    <ul><li>Cuối mỗi quý, HRM gửi <b>form phản hồi ẩn danh</b> để nhân viên đánh giá về: KPI có hợp lý không, Leader có hỗ trợ đủ không, quy trình thăng tiến có minh bạch không</li>
+    <li>Kết quả tổng hợp được chia sẻ lại với BGĐ và dùng để điều chỉnh hệ thống — <b>không dùng để truy tìm ai phản hồi</b></li>
+    <li>Nếu muốn phản ánh trực tiếp và không muốn ẩn danh, nhân viên có thể gặp HRM bất cứ lúc nào — <b>được giữ kín nội dung</b> theo yêu cầu</li></ul></div>
+
+  <div class="block-h"><span class="pill" style="background:var(--amber)">Xử lý ngoại lệ</span></div>
+  <div class="two">
+    <div class="card"><h3>Trường hợp đặc cách</h3><ul class="crit">
+      <li><span class="dot dot-g"></span><span>NV xuất sắc vượt xa chỉ tiêu: Leader đề xuất xét ngoài chu kỳ</span></li>
+      <li><span class="dot dot-g"></span><span>Thử việc lên chính thức: đánh giá ngay sau 2 tháng, không chờ cuối quý</span></li>
+      <li><span class="dot dot-g"></span><span>Điều kiện: BGĐ phê duyệt và có căn cứ số liệu rõ ràng</span></li></ul></div>
+    <div class="card"><h3>Trường hợp không thăng tiến</h3><ul class="crit">
+      <li><span class="dot dot-a"></span><span>NV nhận phản hồi rõ ràng về điểm chưa đạt</span></li>
+      <li><span class="dot dot-a"></span><span>Leader lập kế hoạch hỗ trợ cụ thể cho quý tiếp theo</span></li>
+      <li><span class="dot dot-a"></span><span>Không đạt 3 quý liên tiếp: họp đánh giá với HRM + BGĐ</span></li></ul></div>
+    <div class="card"><h3>Trường hợp giảm cấp</h3><ul class="crit">
+      <li><span class="dot dot-r"></span><span>Chỉ tiêu dưới ngưỡng 3 tháng liên tiếp sau khi đã được nhắc nhở</span></li>
+      <li><span class="dot dot-r"></span><span>Vi phạm nghiêm trọng quy tắc đạo đức hoặc ứng xử</span></li>
+      <li><span class="dot dot-r"></span><span>Có hiệu lực ngay từ tháng tiếp theo sau khi BGĐ phê duyệt</span></li></ul></div>
+    <div class="card"><h3>Nghỉ thai sản / bệnh dài</h3><ul class="crit">
+      <li><span class="dot dot-b"></span><span>Thời gian nghỉ không tính vào chu kỳ xét thăng tiến</span></li>
+      <li><span class="dot dot-b"></span><span>Chu kỳ tính lại từ tháng quay trở lại làm việc</span></li>
+      <li><span class="dot dot-b"></span><span>Không ảnh hưởng quyền lợi và lộ trình thăng tiến</span></li></ul></div>
+  </div>`}},
+
+{id:'kpi',group:'VẬN HÀNH',icon:'⚠',label:'Cơ chế xử lý khi không đạt KPI',render:()=>{
+  const muc=[
+   ['Mức 1','Nhắc nhở','b-amber','Thiếu chỉ tiêu 1 tháng lần đầu, hoặc có biểu hiện chưa đạt nhưng chưa nghiêm trọng','Trao đổi trực tiếp trong buổi check-in, thống nhất rõ ràng','Leader trực tiếp'],
+   ['Mức 2','Cảnh cáo','b-amber','Có dấu hiệu cần lập kế hoạch cải thiện, vi phạm lần 2, hoặc không hoàn thành kế hoạch cải thiện đúng hạn','Lập kế hoạch cải thiện 30–45 ngày, cảnh cáo chính thức','Leader + HRM'],
+   ['Mức 3','Giảm cấp','b-red','Không hoàn thành kế hoạch cải thiện, hoặc KPI dưới ngưỡng 3 tháng liên tiếp sau khi đã được nhắc nhở','Giảm xuống cấp bậc thấp hơn, điều chỉnh lương theo cấp mới, hiệu lực từ tháng tiếp theo','HRM + BGĐ'],
+   ['Mức 4','Chấm dứt HĐ','b-gray','Vi phạm nghiêm trọng, tái phạm sau khi đã bị giảm cấp, hoặc gian lận số liệu','Chấm dứt hợp đồng lao động theo đúng quy định của pháp luật','BGĐ']
+  ];
+  const plan=[
+   ['Xác định rõ vấn đề','buổi check-in phát hiện dấu hiệu','Leader và nhân viên cùng nhìn lại số liệu: chỉ tiêu nào đang thiếu, thiếu bao nhiêu, từ khi nào. Hai bên cùng thống nhất rõ vấn đề.'],
+   ['Lập kế hoạch cải thiện cụ thể','buổi check-in tuần kế tiếp','Đặt mục tiêu từng tuần: tuần này cần đạt gì, tuần sau cần gì. Leader cam kết hỗ trợ gì cụ thể. Hai bên cùng thống nhất mục tiêu.'],
+   ['Theo dõi qua buổi check-in hàng tuần','','Mỗi tuần review kết quả thực tế so với mục tiêu. Có tiến triển tốt → tiếp tục hỗ trợ. Sau 2 buổi liên tiếp vẫn không cải thiện → báo HRM cùng xử lý.'],
+   ['Đánh giá kết quả sau 30–45 ngày','','HRM + Leader đánh giá chính thức. Có cải thiện rõ: kết thúc kế hoạch, theo dõi thêm 1 quý. Không cải thiện: chuyển sang bước xử lý bên dưới.']
+  ];
+  const team=[
+   ['Doanh số team','Tổng DS team / tháng','≥ 300tr/người/tháng','≥ 2 tỷ/tháng (5 × 400tr)','Hàng tháng'],
+   ['Hiệu suất team','% thành viên đạt chỉ tiêu cá nhân','≥ 50% thành viên','≥ 70% thành viên','Cuối quý'],
+   ['Tỷ lệ giữ người','% thành viên ở lại team sau 6 tháng','≥ 50%','≥ 80%','Mỗi 6 tháng'],
+   ['Phát triển người','Số thành viên được thăng cấp trong năm','≥ 1 người/năm','≥ 3 người/năm','Cuối năm'],
+   ['Chi phí quảng cáo team','Tỷ lệ ads / doanh số trung bình cả team','≤ 37%','≤ 35%','Hàng tháng']
+  ];
+  return `<span class="eyebrow">Vận hành</span><h1 class="title">Cơ chế xử lý khi không đạt KPI</h1>
+  <p class="lead">Quy trình xử lý rõ ràng khi nhân viên không đạt kết quả — bảo vệ cả nhân viên lẫn công ty. Kèm chỉ số quản lý team dành riêng cho Leader.</p>
+
+  <div class="block-h"><span class="pill" style="background:var(--red)">KPI tối thiểu theo vị trí</span></div>
+  <div class="three">
+    <div class="card" style="border-top:3px solid var(--green)"><h3>👤 Nhân viên</h3><p class="d" style="margin-top:6px">Trong <b>3 tháng liên tục</b>, phải có ít nhất <b>1 tháng doanh số từ 300tr</b> trở lên.</p></div>
+    <div class="card" style="border-top:3px solid var(--blue)"><h3>👤 Chuyên viên</h3><p class="d" style="margin-top:6px">Trong <b>3 tháng liên tục</b>, phải có ít nhất <b>1 tháng doanh số từ 400tr</b> trở lên.</p></div>
+    <div class="card" style="border-top:3px solid var(--purple)"><h3>👥 Leader</h3><p class="d" style="margin-top:6px">Leader <b>không chỉ bị đo doanh số cá nhân</b>. Từ quý đầu tiên giữ vai trò Leader, các chỉ số quản lý team (bảng bên dưới) được đưa vào đánh giá định kỳ và ảnh hưởng trực tiếp đến việc giữ cấp bậc.</p></div>
+  </div>
+
+  <div class="block-h" style="margin-top:22px"><span class="pill" style="background:var(--purple)">Chỉ số quản lý team — riêng cho Leader</span></div>
+  <div class="tbl-wrap"><table class="jt"><thead><tr><th>Nhóm chỉ số</th><th>Đo bằng gì</th><th>Ngưỡng tối thiểu</th><th>Ngưỡng tốt</th><th>Đo khi nào</th></tr></thead><tbody>
+    ${team.map(t=>`<tr><td class="desc">${t[0]}</td><td>${t[1]}</td><td>${t[2]}</td><td>${t[3]}</td><td>${t[4]}</td></tr>`).join('')}
+  </tbody></table></div>
+  <div class="note" style="margin-top:12px;border-left:4px solid var(--amber)">Nếu <b>2 trong 5 chỉ số team</b> dưới ngưỡng tối thiểu trong 2 quý liên tiếp, Leader sẽ nhận cảnh cáo và cùng CMO xây kế hoạch cải thiện trong 60 ngày.</div>
+
+  <div class="block-h"><span class="pill" style="background:var(--amber)">Kế hoạch cải thiện kết quả — 30 đến 45 ngày</span></div>
+  <div class="flow" style="grid-template-columns:repeat(2,1fr)">${plan.map((s,i)=>`<div class="fstep"><div class="fn"><div class="nm">${i+1}</div><h4>${s[0]}${s[1]?` <span style="font-weight:500;color:var(--muted);font-size:12px">(${s[1]})</span>`:''}</h4></div><p class="d" style="margin-top:0">${s[2]}</p></div>`).join('')}</div>
+
+  <div class="block-h"><span class="pill" style="background:var(--red)">Các mức xử lý — từ nhẹ đến nặng</span></div>
+  <div class="tbl-wrap"><table class="jt"><thead><tr><th>Mức</th><th>Khi nào áp dụng</th><th>Cách xử lý</th><th>Ai quyết định</th></tr></thead><tbody>
+    ${muc.map(m=>`<tr><td><span class="badge ${m[2]}">${m[0]} · ${m[1]}</span></td><td>${m[3]}</td><td class="desc">${m[4]}</td><td>${m[5]}</td></tr>`).join('')}
+  </tbody></table></div>
+
+  <div class="block-h"><span class="pill" style="background:var(--amber)">Cơ chế bảo lãnh — cơ hội giữ cấp</span></div>
+  <div class="card" style="border-left:4px solid var(--amber)">
+    <p class="d" style="margin-top:0">Khi không đạt KPI và có nguy cơ bị xử lý (giảm cấp, cảnh cáo...), nhân sự được quyền <b>tự đề xuất xin bảo lãnh</b> để có thêm cơ hội giữ cấp.</p>
+    <ul class="crit">
+      <li><span class="dot dot-a"></span><span><b>Hình thức:</b> nhân sự <b>chủ động làm đề xuất xin bảo lãnh</b></span></li>
+      <li><span class="dot dot-a"></span><span><b>Trong đề xuất phải có:</b> trình bày <b>lý do rõ ràng</b> (vì sao chưa đạt KPI) + <b>cam kết kết quả mục tiêu</b> cụ thể trong thời gian được bảo lãnh</span></li>
+      <li><span class="dot dot-a"></span><span><b>Người duyệt:</b> Leader trực tiếp + HRM xem xét, BGĐ phê duyệt cuối</span></li>
+      <li><span class="dot dot-a"></span><span><b>Nếu hết thời gian bảo lãnh vẫn không đạt cam kết:</b> áp dụng mức xử lý theo bảng trên, không bảo lãnh tiếp</span></li>
+    </ul>
+  </div>`}},
+
+{id:'quydinh-video',group:'VẬN HÀNH',icon:'🎬',label:'Quy định nội dung video',render:()=>`
+  <span class="eyebrow">Vận hành</span><h1 class="title">Quy định sử dụng nội dung video</h1>
+  <p class="lead">Quy định nội bộ về việc sử dụng nội dung video trong team MKT — đảm bảo công bằng, minh bạch và bảo vệ công sức cá nhân.</p>
+
+  <div class="block-h"><span class="pill">1. Nguyên tắc chung</span></div>
+  <div class="card"><ul class="crit">
+    <li><span class="dot dot-b"></span><span>Mỗi cá nhân chịu trách nhiệm <b>tự sản xuất nội dung</b> phục vụ cho hoạt động quảng cáo của mình</span></li>
+    <li><span class="dot dot-b"></span><span><b>Tôn trọng</b> sản phẩm và công sức của nhau — không sử dụng sản phẩm của người khác khi chưa xin phép</span></li>
+  </ul></div>
+
+  <div class="block-h"><span class="pill" style="background:var(--red)">2. Các hành vi KHÔNG được phép</span></div>
+  <div class="card" style="border-left:4px solid var(--red)"><h3>Cấm tuyệt đối <span class="badge b-red">Vi phạm</span></h3>
+    <p class="d" style="margin-top:6px"><b>Lấy nguyên video của người khác</b> (dù đã đăng hay chưa) để:</p>
+    <ul class="crit">
+      <li><span class="dot dot-r"></span><span>Gắn link / UTM cá nhân để <b>chạy quảng cáo</b></span></li>
+      <li><span class="dot dot-r"></span><span><b>Reup</b> dưới mọi hình thức</span></li>
+      <li><span class="dot dot-r"></span><span>Chỉnh sửa nhẹ (đổi hook, caption, link...) nhưng <b>giữ nguyên phần lớn nội dung gốc</b> — vẫn coi là vi phạm</span></li>
+    </ul></div>
+
+  <div class="block-h"><span class="pill" style="background:var(--green)">3. Các hành vi ĐƯỢC phép (có điều kiện)</span></div>
+  <div class="two">
+    <div class="card"><h3>Có thể làm <span class="badge b-green">OK</span></h3><ul class="crit">
+      <li><span class="dot dot-g"></span><span>Xin source quay (khuyến khích nhờ hướng dẫn để tự quay được, chủ động cho lần sau)</span></li>
+      <li><span class="dot dot-g"></span><span>Tham khảo ý tưởng / format của nhau</span></li></ul></div>
+    <div class="card" style="border-left:4px solid var(--amber)"><h3>Bắt buộc khi tham khảo <span class="badge b-amber">Điều kiện</span></h3><ul class="crit">
+      <li><span class="dot dot-a"></span><span><b>Tự dựng lại</b> thành video mới hoàn toàn</span></li>
+      <li><span class="dot dot-a"></span><span><b>Xin phép trực tiếp</b> người sở hữu nội dung gốc trước khi dùng</span></li></ul></div>
+  </div>
+
+  <div class="block-h"><span class="pill" style="background:var(--purple)">4. Quan điểm của công ty</span></div>
+  <div class="note" style="border-left:4px solid var(--purple)"><ul>
+    <li>Công ty khuyến khích học hỏi và chia sẻ kiến thức — nhưng <b>không chấp nhận</b> việc lấy công sức người khác để chạy số cho cá nhân</li>
+    <li>Với cả đối thủ: <b>tuyệt đối không spy</b> — việc gì mình không muốn xảy ra với mình thì cũng không làm với người khác</li>
+    <li>Hướng tới môi trường <b>công bằng – minh bạch – tôn trọng công sức cá nhân</b></li>
+  </ul></div>
+
+  <div class="block-h"><span class="pill" style="background:var(--red)">5. Xử lý vi phạm</span></div>
+  <div class="tbl-wrap"><table class="jt"><thead><tr><th>Mức độ</th><th>Tình huống</th><th>Hình thức xử lý</th></tr></thead><tbody>
+    <tr><td><span class="badge b-amber">Lần 1</span></td><td>Vi phạm lần đầu, chưa gây thiệt hại lớn</td><td class="desc">Nhắc nhở / cảnh cáo</td></tr>
+    <tr><td><span class="badge b-red">Lần 2</span></td><td>Tái phạm hoặc gây ảnh hưởng đến KPI người khác</td><td class="desc">Dừng chiến dịch liên quan, cảnh cáo chính thức vào hồ sơ</td></tr>
+    <tr><td><span class="badge b-gray">Lần 3 / Cố tình</span></td><td>Tái phạm nhiều lần hoặc có dấu hiệu cố tình</td><td class="desc">Xử lý nghiêm theo quy định công ty — có thể chấm dứt hợp đồng</td></tr>
+  </tbody></table></div>
+  <div class="note" style="margin-top:12px;border-left:4px solid var(--purple)"><b>Nếu phát hiện vi phạm:</b> hãy tự bảo vệ quyền lợi bằng cách <b>lên tiếng trực tiếp với quản lý hoặc HRM</b> để được làm rõ và xử lý khách quan. Lưu lại bằng chứng (screenshot, thời gian đăng, link) trước khi phản ánh.</div>`}
+];
+
+/* ---------- BUILD UI ---------- */
+const nav=document.getElementById('nav'), content=document.getElementById('content');
+let groups={};
+SECTIONS.forEach(s=>{(groups[s.group]=groups[s.group]||[]).push(s);});
+Object.keys(groups).forEach(g=>{
+  const dd=document.createElement('div');dd.className='dd';dd.dataset.group=g;
+  dd.innerHTML=`<button>${g}<span class="ca">▼</span></button>
+    <div class="panel">${groups[g].map(s=>`<a data-id="${s.id}"><span class="ic">${s.icon}</span>${s.label}</a>`).join('')}</div>`;
+  nav.appendChild(dd);
+});
+SECTIONS.forEach(s=>{const d=document.createElement('div');d.className='sec';d.id='sec-'+s.id;d.innerHTML=s.render();content.appendChild(d);});
+
+function closeAll(){document.querySelectorAll('.dd').forEach(d=>d.classList.remove('show'));}
+document.querySelectorAll('.dd>button').forEach(b=>b.addEventListener('click',e=>{
+  e.stopPropagation();const dd=b.parentElement,open=dd.classList.contains('show');closeAll();if(!open)dd.classList.add('show');
+}));
+document.addEventListener('click',closeAll);
+
+function show(id){
+  const sec=SECTIONS.find(s=>s.id===id);
+  document.querySelectorAll('.sec').forEach(e=>e.classList.toggle('show',e.id==='sec-'+id));
+  document.querySelectorAll('.panel a').forEach(a=>a.classList.toggle('active',a.dataset.id===id));
+  document.querySelectorAll('.dd').forEach(d=>d.classList.toggle('has-active',d.dataset.group===sec.group));
+  closeAll();window.scrollTo({top:0,behavior:'smooth'});
+}
+document.querySelectorAll('.panel a').forEach(a=>a.addEventListener('click',()=>show(a.dataset.id)));
+show('tongquan');
+</script>
+</body>
+</html>
